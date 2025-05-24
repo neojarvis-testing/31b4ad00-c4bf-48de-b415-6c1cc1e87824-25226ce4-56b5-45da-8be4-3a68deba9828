@@ -10,14 +10,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.examly.springapploan.exception.BadInputDataException;
+import com.examly.springapploan.exception.LoanDetailsNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadInputDataException.class)
-    public ResponseEntity<Map<Object, Object>> getExceptionDetails(BadInputDataException exception) {
+    public ResponseEntity<Map<Object, Object>> getBadInputExceptionDetails(BadInputDataException exception) {
         return ResponseEntity
                 .status(400)
+                .body(Map.of("exception", exception.getMessage()));
+    }
+
+
+    @ExceptionHandler(LoanDetailsNotFoundException.class)
+    public ResponseEntity<Map<Object, Object>> getLoanNotFoundExceptionDetails(LoanDetailsNotFoundException exception) {
+        return ResponseEntity
+                .status(404)
                 .body(Map.of("exception", exception.getMessage()));
     }
 

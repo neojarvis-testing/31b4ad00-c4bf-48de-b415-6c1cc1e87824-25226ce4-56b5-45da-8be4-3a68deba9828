@@ -10,4 +10,9 @@ public interface LoanService {
     public Loan createNewLoanRequest(Loan loan);
 
     public Loan fetchLoanDetailsByLoanId(Long loanId);
+
+    public Loan updateLoanDetails(Long loanId, Loan loan);
+
+
+    public void deleteLoanDetailsByLoanId(Long loanId);
 }

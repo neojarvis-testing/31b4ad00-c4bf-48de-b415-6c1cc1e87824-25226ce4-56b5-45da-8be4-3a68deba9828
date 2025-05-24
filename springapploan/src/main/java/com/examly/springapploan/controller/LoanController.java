@@ -47,12 +47,24 @@ public class LoanController {
 
     @PutMapping("/{loanId}")
     @PreAuthorize("hasAnyRole('BRANCH MANAGER', 'LOAN MANAGER')")
-    public ResponseEntity<Loan> updateLoanDetailsByLoanId(@PathVariable("loanId") Long loanId, @RequestBody Loan Loan) {
-        Loan updatedLoanDetails = loanService.udpateLoanDetails(loanId, loan);
+    public ResponseEntity<Loan> updateLoanDetailsByLoanId(@PathVariable("loanId") Long loanId, @Valid @RequestBody Loan loan) {
+        Loan updatedLoanDetails = loanService.updateLoanDetails(loanId, loan);
         return ResponseEntity
         .status(200)
-        .body()
+        .body(updatedLoanDetails);
     }
+
+    @DeleteMapping("/{loanId}")
+    @PreAuthorize("hasRole('LOAN MANAGER')")
+    public ResponseEntity<String> deleteLoanDetailsById(@PathVariable Long loanId) {
+        loanService.deleteLoanDetailsByLoanId(loanId);
+
+        return ResponseEntity
+        .status(200)
+        .body("loan details deleted successfully");
+    }
+
+
 
 
 }
