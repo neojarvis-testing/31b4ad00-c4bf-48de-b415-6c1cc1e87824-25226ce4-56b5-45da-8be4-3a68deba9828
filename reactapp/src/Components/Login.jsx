@@ -13,7 +13,7 @@ const Login = () => {
 
   const handleLogin = (user) => {
     console.log("USer::", user)
-    dispatch(setUserInfo(user));
+    dispatch(setUserInfo({email:user.email,jwt_token:"fhdgj6ygdbhj328jdvn832jhf7"}));
     navigate("/home");
   }
 

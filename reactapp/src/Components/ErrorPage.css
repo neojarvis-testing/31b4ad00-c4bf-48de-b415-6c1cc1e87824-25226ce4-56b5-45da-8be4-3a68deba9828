@@ -1,0 +1,11 @@
+img{
+    height: 250px;
+    margin-top:50px;
+}
+
+.unathorizedPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}

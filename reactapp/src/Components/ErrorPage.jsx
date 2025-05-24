@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import './ErrorPage.css'
 
 const ErrorPage = () => {
   return (
-    <div>
-      Page Not Found.
+    <div> 
+      <img src='alert.png' />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>Please try again later</p>
     </div>
   )
 }
