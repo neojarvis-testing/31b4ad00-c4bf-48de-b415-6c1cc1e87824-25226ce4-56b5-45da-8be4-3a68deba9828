@@ -1,0 +1,28 @@
+.bg-login-screen {
+    background-image: linear-gradient(180deg, #090979, #00D4FF);
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.app-content{
+    color: #ffffff;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.login-form-bg{
+    background-image: linear-gradient(180deg, #090979);
+    padding: 50px 120px;
+    display: flex;
+    align-items: center;
+}
+
+h2{
+    margin-bottom: 10px;
+}
