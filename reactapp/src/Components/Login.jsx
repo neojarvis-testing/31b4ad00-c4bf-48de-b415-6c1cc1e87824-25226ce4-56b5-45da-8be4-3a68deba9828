@@ -1,10 +1,10 @@
 import React from 'react'
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '../slice/userSlice';
+import { FormValidations } from '../formValidations';
 
 const Login = () => {
 
@@ -17,17 +17,17 @@ const Login = () => {
     navigate("/home");
   }
 
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: ''
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().email('Please enter a valid email address').required('Email is required'),
-      password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required')
-    }),
-    onSubmit: handleLogin
-  })
+  const initialValues={
+    email: '',
+    password: ''
+  }
+
+  const yupObject={
+    email: Yup.string().email('Please enter a valid email address').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required')
+  }
+
+  const formik = FormValidations(initialValues,yupObject,handleLogin)
 
   return (
     <div className='bg-login-screen'>

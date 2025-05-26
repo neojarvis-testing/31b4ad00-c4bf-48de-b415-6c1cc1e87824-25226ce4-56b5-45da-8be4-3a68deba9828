@@ -7,6 +7,7 @@ import com.examly.springappuser.model.User;
 import com.examly.springappuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api")
@@ -26,10 +27,10 @@ public class AuthController {
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user){
+    public ResponseEntity<?> registerUser(@RequestBody User user){
         try{
             userService.registerUser(user);
-            return ResponseEntity.status(201).body("OK");
+            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
         }
         catch(IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,14 +40,10 @@ public class AuthController {
         }
     } 
 
-    @GetMapping("/user/byEmail")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String emailId){
+    @GetMapping("/user/byEmail/{emailId}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String emailId){
         User user= userService.getUserByEmailId(emailId);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/check")
-    public String hello(){
-        return "Hello World";
-    }
 }

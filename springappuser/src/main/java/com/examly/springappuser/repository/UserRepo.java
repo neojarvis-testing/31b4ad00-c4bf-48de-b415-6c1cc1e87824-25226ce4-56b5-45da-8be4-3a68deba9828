@@ -8,4 +8,6 @@ import com.examly.springappuser.model.User;
 @Repository
 public interface UserRepo extends JpaRepository<User,Integer>{
     Optional<User> findByEmailId(String emailId);
+
+    User save(User user);
 }
