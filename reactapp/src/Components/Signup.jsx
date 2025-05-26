@@ -1,8 +1,8 @@
 import React from 'react';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css'
+import { FormValidations } from '../formValidations';
 
 const Signup = () => {
 
@@ -13,25 +13,25 @@ const Signup = () => {
     navigate("/");
   }
 
-  const formik = useFormik({
-    initialValues: {
-      userName: '',
-      email: '',
-      mobileNumber: '',
-      password: '',
-      confirmPassword: '',
-      role: ''
-    },
-    validationSchema: Yup.object({
-      userName: Yup.string().required('User Name is required'),
-      email: Yup.string().email('Please enter a valid email address').required('Email is required'),
-      password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required'),
-      mobileNumber: Yup.string().length(10, "Mobile Number must be exactly 10 charcters").required("Mobile Number is required"),
-      confirmPassword: Yup.string().required("Confirm Password is required").oneOf([Yup.ref('password')], 'Passwords must match'),
-      role: Yup.string().required('Role is required')
-    }),
-    onSubmit: handleSubmit
-  })
+  const initialValues={
+    userName: '',
+    email: '',
+    mobileNumber: '',
+    password: '',
+    confirmPassword: '',
+    role: ''
+  }
+
+  const yupObject={
+    userName: Yup.string().required('User Name is required'),
+    email: Yup.string().email('Please enter a valid email address').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required'),
+    mobileNumber: Yup.string().length(10, "Mobile Number must be exactly 10 charcters").required("Mobile Number is required"),
+    confirmPassword: Yup.string().required("Confirm Password is required").oneOf([Yup.ref('password')], 'Passwords must match'),
+    role: Yup.string().required('Role is required')
+  }
+
+  const formik= FormValidations(initialValues,yupObject,handleSubmit);
 
   return (
     <div className='signup-box signup-div'>
