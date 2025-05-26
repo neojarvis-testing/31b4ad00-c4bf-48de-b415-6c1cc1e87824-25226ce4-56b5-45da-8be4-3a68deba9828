@@ -175,7 +175,6 @@ label {
 
 input {
   padding: 10px;
-  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
@@ -226,4 +225,7 @@ button:hover {
 }
 
 
-
+.errorMessage{
+  color: red; 
+  font-size: 14px;
+}
