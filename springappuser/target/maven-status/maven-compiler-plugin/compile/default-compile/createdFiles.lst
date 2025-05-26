@@ -1,3 +1,4 @@
+com/examly/springappuser/config/CorsConfig.class
 com/examly/springappuser/config/AppSecurityConfig.class
 com/examly/springappuser/service/UserService.class
 com/examly/springappuser/model/User.class

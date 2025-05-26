@@ -3,14 +3,22 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css'
 import { FormValidations } from '../formValidations';
+import { registerUser } from '../apiConfig';
 
 const Signup = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (user) => {
+  const handleSubmit = async (user) => {
     console.log("Registered::", user);
     navigate("/");
+    // const userRegistered=await registerUser(user);
+    // if(userRegistered==="OK"){
+    //   alert("User Registered Successfully");
+    //   navigate("/");
+    // }else{
+    //   alert("Some thing went wrong");
+    // }
   }
 
   const initialValues={
