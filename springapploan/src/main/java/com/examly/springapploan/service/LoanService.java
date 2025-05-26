@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.examly.springapploan.model.Loan;
 
+import java.util.List;
+
+import com.examly.springapploan.model.Loan;
+
 public interface LoanService {
     public List<Loan> fetchAllLoans();
 
@@ -14,5 +18,5 @@ public interface LoanService {
     public Loan updateLoanDetails(Long loanId, Loan loan);
 
 
-    public void deleteLoanDetailsByLoanId(Long loanId);
+    public Loan deleteLoanDetailsByLoanId(Long loanId);
 }
