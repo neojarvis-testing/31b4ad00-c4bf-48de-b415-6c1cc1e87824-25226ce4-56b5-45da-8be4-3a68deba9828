@@ -60,12 +60,15 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public void deleteLoanDetailsByLoanId(Long loanId) {
+    public Loan deleteLoanDetailsByLoanId(Long loanId) {
         Loan loanDetails = loanRepository.findByLoanId(loanId)
                 .orElseThrow(
                         () -> new LoanDetailsNotFoundException(
                                 "Loan details cannot be deleted as the loan id not found" + loanId));
         loanRepository.delete(loanDetails);
+        return loanDetails;
     }
 
+
+    
 }

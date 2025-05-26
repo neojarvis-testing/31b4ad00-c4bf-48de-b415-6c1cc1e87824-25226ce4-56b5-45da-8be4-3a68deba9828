@@ -1,8 +1,26 @@
 spring:
   application:
     name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      
   
 eureka:
   client:
     serviceUrl:
-      defaultZone: 
+      defaultZone: https://ide-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/proxy/8761/eureka
+      register-with-eureka: true
+
+  instance:
+    prefer-ip-address: true
+  
+
+
+# jwt secret
+

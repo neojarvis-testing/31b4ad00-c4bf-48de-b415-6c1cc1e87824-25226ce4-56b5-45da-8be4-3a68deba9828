@@ -1,6 +1,7 @@
 package com.examly.springapploan.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -55,4 +56,12 @@ public class Loan {
 
     @NotNull(message = "please enter the late payment fee")
     private BigDecimal latePaymentFee;
+
+
+    /* Added below extra */
+    @OneToMany(mappedBy = "loan")
+    private List<LoanApplication> loanApplications;
+
+    @OneToMany(mappedBy="loan")
+    private List<Notification> notifications;
 }

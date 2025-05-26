@@ -1,47 +1,45 @@
 package com.examly.springapploan;
 
-import org.springframework.boot.test.context.SpringBootTest;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import java.lang.reflect.Field; 
- 
+
+import java.lang.reflect.Field;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(classes = SpringapploanApplication.class)
+@SpringBootTest
+// (classes = SpringapploanApplication.class)
 @AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 class SpringappApplicationTests {
 	
+    
 	 @Autowired
 	    private MockMvc mockMvc;
 	 
 		@Test
 		@Order(1)
+        @WithMockUser(username="test", roles={"CUSTOMER"})
 	    public void backend_testGetAllloans() throws Exception {
-	        mockMvc.perform(get("/api/loan")
+	        mockMvc.perform(get("/api/loans")
 			.contentType(MediaType.APPLICATION_JSON))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 	        .andDo(print())
@@ -168,5 +166,4 @@ class SpringappApplicationTests {
 	   public void backend_testLoanApplocationModelClassExists() {
 	       checkClassExists("com.examly.springapploan.model.LoanApplication");
 	   }
-
 }
