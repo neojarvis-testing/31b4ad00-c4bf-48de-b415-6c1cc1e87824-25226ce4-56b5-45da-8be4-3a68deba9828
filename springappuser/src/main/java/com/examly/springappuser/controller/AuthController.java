@@ -1,10 +1,10 @@
-package controller;
+package com.examly.springappuser.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import model.LoginDTO;
-import model.User;
-import service.UserService;
+import com.examly.springappuser.model.LoginDTO;
+import com.examly.springappuser.model.User;
+import com.examly.springappuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 

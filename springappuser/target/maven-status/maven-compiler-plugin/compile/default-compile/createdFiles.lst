@@ -1,8 +1,9 @@
-controller/AuthController.class
-service/UserServiceImpl.class
+com/examly/springappuser/config/AppSecurityConfig.class
+com/examly/springappuser/service/UserService.class
+com/examly/springappuser/model/User.class
 com/examly/springappuser/SpringappuserApplication.class
-repository/UserRepo.class
-model/User.class
-service/UserService.class
-model/LoginDTO.class
-com/examly/springappuser/config/AppSecurityCongig.class
+com/examly/springappuser/controller/AuthController.class
+com/examly/springappuser/repository/UserRepo.class
+com/examly/springappuser/service/JWTUtil.class
+com/examly/springappuser/service/UserServiceImpl.class
+com/examly/springappuser/model/LoginDTO.class

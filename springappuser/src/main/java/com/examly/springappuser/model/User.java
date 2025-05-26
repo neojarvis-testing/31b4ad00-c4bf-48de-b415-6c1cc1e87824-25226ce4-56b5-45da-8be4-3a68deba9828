@@ -1,4 +1,4 @@
-package model;
+package com.examly.springappuser.model;
 
 import javax.annotation.processing.Generated;
 

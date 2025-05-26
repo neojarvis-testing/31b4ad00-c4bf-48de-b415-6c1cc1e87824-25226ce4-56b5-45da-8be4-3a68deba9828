@@ -1,9 +1,9 @@
-package service;
+package com.examly.springappuser.service;
 
 import java.util.Map;
 
-import model.User;
-import model.LoginDTO;
+import com.examly.springappuser.model.User;
+import com.examly.springappuser.model.LoginDTO;
 
 public interface UserService {
 

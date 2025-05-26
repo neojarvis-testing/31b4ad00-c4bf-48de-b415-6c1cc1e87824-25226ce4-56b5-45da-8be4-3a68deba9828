@@ -1,18 +1,18 @@
-package service;
+package com.examly.springappuser.service;
 
 import org.springframework.stereotype.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import model.User;
-import model.LoginDTO;
-import repository.UserRepo;
+import com.examly.springappuser.model.User;
+import com.examly.springappuser.model.LoginDTO;
+import com.examly.springappuser.repository.UserRepo;
+import com.examly.springappuser.service.JWTUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -21,6 +21,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @Override
     public Map<String,Object> loginUserByEmailId(LoginDTO loginDTO){
