@@ -29,3 +29,19 @@ export const dispatchCurrentUser = async (dispatch) => {
     const user = await getUserByEmailId(userEmail);
     dispatch(user);
 }
+
+export const addLoanApplication = async (loanapplication) => {
+    return await axios.post(`${apiUrl}/api/loanapplications`, loanapplication);
+}
+
+export const addFeedback = async (feedback) => {
+    return await axios.post(`${apiUrl}/api/feedback`, feedback);
+}
+
+export const getFeedbacksByUserId = async (userId) => {
+    return await axios.get(`${apiUrl}/api/feedback/${userId}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
