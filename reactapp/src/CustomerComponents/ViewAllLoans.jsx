@@ -1,8 +1,12 @@
 import React from 'react'
+import CustomerNavbar from './CustomerNavbar'
 
 const ViewAllLoans = () => {
   return (
-    <div>ViewAllLoans</div>
+    <div>
+      <CustomerNavbar/>
+      <h2>ViewAllLoans</h2>
+    </div>
   )
 }
 

@@ -1,8 +1,12 @@
 import React from 'react'
+import CustomerNavbar from './CustomerNavbar'
 
 const AppliedLoans = () => {
   return (
-    <div>AppliedLoans</div>
+    <div>
+      <CustomerNavbar/>
+      <h2>AppliedLoans</h2>
+    </div>
   )
 }
 

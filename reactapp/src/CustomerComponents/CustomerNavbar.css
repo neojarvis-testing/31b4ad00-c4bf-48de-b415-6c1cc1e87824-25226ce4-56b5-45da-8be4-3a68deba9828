@@ -1,0 +1,54 @@
+header {
+    background-image: linear-gradient(90deg, #090979, #00D4FF, #090979);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#logoutbutton {
+    float: right;
+    margin: 20px;
+    background-color: red;
+    color: #ffffff;
+}
+
+ul {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-between;
+}
+
+li {
+    margin-right: 20px;
+}
+
+.navbar-align {
+    display: flex;
+    flex-direction: row;
+}
+
+.app {
+    font-size: 24px;
+}
+
+.user-details {
+    border: 2px solid #FBE790;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 100px;
+}
+
+.user-details p {
+    color: #FBE790;
+    font-weight: 600;
+}
