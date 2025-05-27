@@ -9,12 +9,12 @@ const CustomerMyFeedback = () => {
   const dispatch = useDispatch();
   const getUser = useSelector((state) => state.userData.userInfo);
 
-  useEffect(()=>{
-    async function fetchFeedbacks(){
-      setMyFeedback(await getFeedbacksByUserId(getUser.userId));
-    }
-    getUser && fetchFeedbacks();
-  })
+  // useEffect(()=>{
+  //   async function fetchFeedbacks(){
+  //     setMyFeedback(await getFeedbacksByUserId(getUser.userId));
+  //   }
+  //   getUser && fetchFeedbacks();
+  // })
 
   useEffect(() => {
     dispatchCurrentUser(dispatch);

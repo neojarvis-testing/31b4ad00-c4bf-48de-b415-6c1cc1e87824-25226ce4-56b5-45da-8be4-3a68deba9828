@@ -12,31 +12,31 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogin = async(user) => {
+  const handleLogin = async (user) => {
     console.log("User::", user)
-      dispatch(setUserInfo({email:user.email,jwt_token:"yf74fghjd83yirefhfher754yrtfjk_fcbvfrufij"}));
-      navigate("/home");
+    dispatch(setUserInfo({ email: user.email, jwt_token: "yf74fghjd83yirefhfher754yrtfjk_fcbvfrufij" }));
+    navigate("/home");
     // const isUserValid = await authUser(user);
-    // if(isUserValid.status==="success"){
-    //   dispatch(setUserInfo({email:user.email,jwt_token:isUserValid.token}));
+    // if (isUserValid.status === "success") {
+    //   dispatch(setUserInfo({ email: user.email, jwt_token: isUserValid.token }));
     //   navigate("/home");
     // }
-    // else{
+    // else {
     //   alert("Invalid Credentials")
     // }
   }
 
-  const initialValues={
+  const initialValues = {
     email: '',
     password: ''
   }
 
-  const yupObject={
+  const yupObject = {
     email: Yup.string().email('Please enter a valid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required')
   }
 
-  const formik = FormValidations(initialValues,yupObject,handleLogin)
+  const formik = FormValidations(initialValues, yupObject, handleLogin)
 
   return (
     <div className='bg-login-screen'>
