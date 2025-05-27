@@ -7,6 +7,7 @@ com/examly/springapploan/service/LoanService.class
 com/examly/springapploan/exception/GlobalExceptionHandler.class
 com/examly/springapploan/model/Loan$LoanBuilder.class
 com/examly/springapploan/service/NotificationService.class
+com/examly/springapploan/config/JwtAuthenticaionFilter.class
 com/examly/springapploan/config/ApplicationSecurityConfig.class
 com/examly/springapploan/controller/NotificationController.class
 com/examly/springapploan/model/LoanDisbursement.class
