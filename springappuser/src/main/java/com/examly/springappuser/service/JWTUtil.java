@@ -5,7 +5,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.examly.springappuser.model.User;
+
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class JWTUtil {
@@ -15,11 +18,18 @@ public class JWTUtil {
 
     public static final long VALIDITY_PERIOD=60*60*1000;
 
-    public String generateToken(String email){
+    public String generateToken(User user){
         return Jwts.builder()
-                .setExpiration(new Date(System.currentTimeMillis()+ VALIDITY_PERIOD))
-                .setIssuedAt(new Date())
-                .setSubject(email)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date(System.currentTimeMillis()+ VALIDITY_PERIOD))
+                .setSubject(user.getEmailId())
+                .setClaims(
+                    Map.of(
+                        "email", user.getEmailId(),
+                        "role", user.getUserRole(),
+                        "userId", user.getUserId()
+                    )
+                )
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

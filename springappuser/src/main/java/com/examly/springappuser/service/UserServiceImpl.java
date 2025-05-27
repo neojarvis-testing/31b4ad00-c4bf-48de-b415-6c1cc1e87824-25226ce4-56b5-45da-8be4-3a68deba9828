@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
         Map<String,Object> res = new HashMap<>();
         User userByEmail=userRepo.findByEmailId(loginDTO.getEmailId()).orElse(null);
         if(userByEmail !=null && userByEmail.getPassword().equals(loginDTO.getPassword())){
-            String jwt_token= jwtUtil.generateToken(userByEmail.getEmailId());
+            String jwt_token= jwtUtil.generateToken(userByEmail);
             res.put("status","success");
             res.put("token",jwt_token);
         }else{
