@@ -13,12 +13,12 @@ spring:
         cors-configurations:
           "[/**]":
             allowedOrigins:
-              - "http://localhost:8083/"
+              - "https://8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io"
               - "http://localhost:8085/"
               - "http://localhost:8087/"
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: https://ide-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/proxy/8761/eureka
+      # defaultZone: https://ide-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/proxy/8761/eureka
       register-with-eureka: true
