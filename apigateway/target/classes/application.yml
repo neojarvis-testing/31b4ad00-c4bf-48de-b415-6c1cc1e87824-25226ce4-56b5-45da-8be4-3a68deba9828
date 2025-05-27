@@ -11,14 +11,12 @@ spring:
 
       globalcors:
         cors-configurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins:
               - "http://localhost:8083/"
               - "http://localhost:8085/"
               - "http://localhost:8087/"
 
-      
-  
 eureka:
   client:
     serviceUrl:
