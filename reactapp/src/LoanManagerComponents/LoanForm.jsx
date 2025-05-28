@@ -1,5 +1,5 @@
 // LoanForm.jsx
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -14,7 +14,6 @@ const validationSchema = Yup.object({
 });
 
 const LoanForm = ({ loan, onSave }) => {
-  // Prepopulate fields when editing an existing loan
   const initialValues = loan || {
     name: "",
     loanType: "",
@@ -27,6 +26,7 @@ const LoanForm = ({ loan, onSave }) => {
       <h2>{loan ? "Edit Loan" : "Add Loan"}</h2>
       <Formik
         initialValues={initialValues}
+        enableReinitialize={true} {/* <- Important for editing */}
         validationSchema={validationSchema}
         onSubmit={onSave}
       >

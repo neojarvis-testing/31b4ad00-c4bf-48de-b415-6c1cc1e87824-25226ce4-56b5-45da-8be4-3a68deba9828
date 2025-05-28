@@ -1,10 +1,8 @@
 // ViewLoanRequests.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Modal from "react-modal";
-import LoanForm from "./LoanForm";
 
-// Sample Loan Data (In real app, this should come from API)
+// Sample Loan Data (In real app, this should come from API or context)
 const sampleLoans = [
   {
     id: 1,
@@ -31,30 +29,21 @@ const sampleLoans = [
 
 const ViewLoans = () => {
   const [loans, setLoans] = useState(sampleLoans);
-  const [selectedLoan, setSelectedLoan] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleViewDetails = (loan) => {
-    setSelectedLoan(loan);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedLoan(null);
-  };
 
   const handleDelete = (id) => {
     setLoans(loans.filter((loan) => loan.id !== id));
   };
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h1>Loan Requests</h1>
       <Link to="/add-loan">
         <button>Add New Loan</button>
       </Link>
-      <table>
+      <table
+        className="loan-table"
+        style={{ width: "100%", marginTop: "20px", borderCollapse: "collapse" }}
+      >
         <thead>
           <tr>
             <th>Name</th>
@@ -69,12 +58,9 @@ const ViewLoans = () => {
             <tr key={loan.id}>
               <td>{loan.name}</td>
               <td>{loan.loanType}</td>
-              <td>{loan.amount}</td>
+              <td>${loan.amount}</td>
               <td>{loan.status}</td>
               <td>
-                <button onClick={() => handleViewDetails(loan)}>
-                  View Details
-                </button>
                 <Link to={`/edit-loan/${loan.id}`}>
                   <button>Edit</button>
                 </Link>
@@ -84,33 +70,6 @@ const ViewLoans = () => {
           ))}
         </tbody>
       </table>
-
-      {/* Modal to show Loan Details */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={handleCloseModal}
-        contentLabel="Loan Details"
-      >
-        {selectedLoan && (
-          <div>
-            <h2>Loan Details</h2>
-            <p>
-              <strong>Name:</strong> {selectedLoan.name}
-            </p>
-            <p>
-              <strong>Loan Type:</strong> {selectedLoan.loanType}
-            </p>
-            <p>
-              <strong>Amount:</strong> ${selectedLoan.amount}
-            </p>
-            <p>
-              <strong>Status:</strong> {selectedLoan.status}
-            </p>
-            {/* Add more fields if necessary */}
-            <button onClick={handleCloseModal}>Close</button>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };
