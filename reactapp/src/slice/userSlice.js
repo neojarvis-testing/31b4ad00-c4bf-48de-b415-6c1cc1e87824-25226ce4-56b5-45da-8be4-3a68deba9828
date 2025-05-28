@@ -16,8 +16,8 @@ export const userSlice = createSlice({
             state.userInfo = action.payload
         },
         logoutUser: (state) => {
-            state.email = localStorage.setItem("email", "")
-            state.token = localStorage.setItem("jwt_token", "")
+            state.email = localStorage.removeItem("email")
+            state.token = localStorage.removeItem("jwt_token")
         }
     }
 })

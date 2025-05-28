@@ -26,7 +26,7 @@ const CustomerNavbar = () => {
           <Link to='/home' className='app'>LoanVault</Link>
         </div>
         <div className='user-details'>
-          <p>Harsha Raj/Customer</p>
+          <p></p>
         </div>
         <div className='navbar-align'>
           <ul>

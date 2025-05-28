@@ -7,26 +7,17 @@ import { currentUser, dispatchCurrentUser, getUserByEmailId } from '../apiConfig
 import { userDetails } from '../slice/userSlice';
 import LoanApplicationForm from '../CustomerComponents/LoanApplicationForm';
 
+import { userInfo } from './PrivateRoute';
+
 const HomePage = () => {
 
-    const currentUserRole = "Customer";
+    const currentUserRole = userInfo()?.role;
 
-    const currentUserEmail = useSelector((state) => state.userData.email);
-    const dispatch = useDispatch();
-    const currentUser = useSelector((state) => state.userData.userInfo);
-
-    useEffect(() => {
-        // Get Current User Details using user email
-        // async function fetchCurrentUser() {
-        //     currentUserEmail && (await dispatchCurrentUser(dispatch))
-        // }
-        // fetchCurrentUser();
-    }, [currentUserEmail])
     return (
         <div>
-            {currentUserRole === "Customer" && <LoanApplicationForm />}
-            {currentUserRole === "Loan Manager" && <LoanManagerNavbar />}
-            {currentUserRole === "Branch Manager" && <BranchManagerNavbar />}
+            {currentUserRole === "CUSTOMER" && <CustomerNavbar />}
+            {currentUserRole === "LOAN MANAGER" && <LoanManagerNavbar />}
+            {currentUserRole === "BRANCH MANAGER" && <BranchManagerNavbar />}
         </div>
     )
 }

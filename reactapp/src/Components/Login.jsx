@@ -7,26 +7,24 @@ import { setUserInfo } from '../slice/userSlice';
 import { FormValidations } from '../formValidations';
 import { authUser } from '../apiConfig';
 
+
+
 const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogin = async (user) => {
-    console.log("User::", user)
-
+    
     const {email, ...rest} = user;
     const updatedUser = {emailId: email, ...rest};
 
-    console.log(updatedUser);
 
-      // dispatch(setUserInfo({email:user.email,jwt_token:"yf74fghjd83yirefhfher754yrtfjk_fcbvfrufij"}));
-      // navigate("/home");
     const isUserValid = await authUser(updatedUser);
 
-    console.log(isUserValid);
-    if(isUserValid.status==="success"){
-      dispatch(setUserInfo({email:user.email,jwt_token:isUserValid.token}));
+
+    if(isUserValid.status===200){
+      dispatch(setUserInfo({email:user.email,jwt_token:isUserValid.data.token}));
       navigate("/home");
     }
     else{

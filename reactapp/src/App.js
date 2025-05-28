@@ -14,6 +14,9 @@ import ViewAllLoans from './CustomerComponents/ViewAllLoans';
 import LoanRequest from './LoanManagerComponents/LoanRequest';
 import CustomerPostFeedback from './CustomerComponents/CustomerPostFeedback';
 import CustomerMyFeedback from './CustomerComponents/CustomerMyFeedback';
+import ViewFeedback from './LoanManagerComponents/ViewFeedback';
+import LoanForm from './LoanManagerComponents/LoanForm';
+import ViewLoans from './LoanManagerComponents/ViewLoans';
 
 const App = () => {
     return (
@@ -23,15 +26,17 @@ const App = () => {
                     <Route path="/" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/home" element={<HomePage />} />
-                    <Route element={<PrivateRoute allowedRoles={['Branch Manager']} />} >
+                    <Route element={<PrivateRoute allowedRoles={['BRANCH MANAGER']} />} >
                         <Route path="/loansApproval" element={<LoansApproval />} />
                         <Route path="/loanapplications" element={<LoanApplicationApproval />} />
                     </Route>
-                    <Route element={<PrivateRoute allowedRoles={['Loan Manager']} />} >
+                    <Route element={<PrivateRoute allowedRoles={['LOAN MANAGER']} />} >
+                        <Route path="/loans" element={<ViewLoans />} />
                         <Route path="/loan-request" element={<LoanRequest />} />
                         <Route path="/loandisbursement" element={<LoanDisbursementForm />} />
+                        <Route path='/feedback' element={<ViewFeedback />} />
                     </Route>
-                    <Route element={<PrivateRoute allowedRoles={['Customer']} />}>
+                    <Route element={<PrivateRoute allowedRoles={['CUSTOMER']} />}>
                         <Route path="/applied-loans" element={<AppliedLoans />} />
                         <Route path="/loans" element={<ViewAllLoans />} />
                         <Route path='/customer-post-feedback' element={<CustomerPostFeedback />} />
