@@ -71,6 +71,45 @@ export const getLoans = async (token) => {
     })
 }
 
+
+
+export const getLoanById = async (loanId, token) => {
+    return await axios.get(`${apiUrl}/api/loans/${loanId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+}
+
+
+export const addLoan = async (data, token) => {
+    return await axios.post(`${apiUrl}/api/loans`, JSON.stringify(data), {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+
+export const deleteLoan = async (loanId, token) => {
+    return await axios.delete(`${apiUrl}/api/loans/${loanId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+}
+
+
+export const updateLoan = async (loanId, updatedLoanInformation, token) => {
+    return await axios.put(`${apiUrl}/api/loans/${loanId}`, JSON.stringify(updatedLoanInformation), {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 export const getLoanApplicationsByUserId = async (userId) => {
     return await axios.get(`${apiUrl}/api/loanapplications/user/${userId}`, {
         headers: {
@@ -86,6 +125,9 @@ export const viewLoanApplicationById = async (loanId) => {
         }
     })
 }
+
+
+
 
 export const updateLoanApplication = async (loanId, loanApplicationBody) => {
     return await axios.put(`${apiUrl}/api/loanapplications/${loanId}`, loanApplicationBody)

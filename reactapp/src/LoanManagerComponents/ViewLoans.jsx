@@ -1,12 +1,10 @@
 // ViewLoanRequests.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Modal from "react-modal";
-import LoanForm from "./LoanForm";
 import "./ViewLoans.css";
 import LoanManagerNavbar from "./LoanManagerNavbar";
 import "./ViewLoans.css";
-import { getLoans } from "../apiConfig";
+import { deleteLoan, getLoans } from "../apiConfig";
 
 // Sample Loan Data (In real app, this should come from API or context)
 
@@ -33,8 +31,17 @@ const ViewLoans = () => {
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDelete = (id) => {
-    setLoans(loans.filter((loan) => loan.id !== id));
+  const handleDelete = async (loanId) => {
+    const confirmDelete = window.confirm("are you sure, do you want to delete this loan");
+    
+    if(!confirmDelete) return;
+    try {
+      await deleteLoan(loanId, token);
+      setLoans((prev) => prev.filter((loan) => loan.loanId !== loanId));
+    } catch(error) {
+      alert("failed to delete");
+    }
+
   };
 
   // const handleViewDetails = (loan) => {
@@ -93,7 +100,7 @@ const ViewLoans = () => {
                 <td>{loan.status}</td>
                 <td>{loan.processingFee}</td>
                 <td>{loan.prepaymentPenalty}</td>
-                <td>{loan.gracePreriodMonths}</td>
+                <td>{loan.gracePeriodMonths}</td>
                 <td>{loan.latePaymentFee}</td>
 
                 <td>
