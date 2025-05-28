@@ -5,7 +5,7 @@ import { getLoans } from '../apiConfig';
 import './ViewAllLoans.css'
 
 const ViewAllLoans = () => {
-const token=localStorage.getItem("token");
+const token=localStorage.getItem("jwt_token");
 
 const [loans,setLoans]=useState([]);
   // useEffect(()=>{

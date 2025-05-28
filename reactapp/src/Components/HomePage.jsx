@@ -15,7 +15,7 @@ const HomePage = () => {
 
     return (
         <div>
-            {currentUserRole === "CUSTOMER" && <CustomerNavbar />}
+            {currentUserRole === "CUSTOMER" && <LoanApplicationForm />}
             {currentUserRole === "LOAN MANAGER" && <LoanManagerNavbar />}
             {currentUserRole === "BRANCH MANAGER" && <BranchManagerNavbar />}
         </div>

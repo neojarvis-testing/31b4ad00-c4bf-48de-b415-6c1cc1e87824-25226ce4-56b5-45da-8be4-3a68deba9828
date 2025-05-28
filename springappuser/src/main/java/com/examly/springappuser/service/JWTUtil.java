@@ -27,7 +27,8 @@ public class JWTUtil {
                     Map.of(
                         "email", user.getEmailId(),
                         "role", user.getUserRole(),
-                        "userId", user.getUserId()
+                        "userId", user.getUserId(),
+                        "userName",user.getUserName()
                     )
                 )
                 .signWith(SignatureAlgorithm.HS256, secretKey)

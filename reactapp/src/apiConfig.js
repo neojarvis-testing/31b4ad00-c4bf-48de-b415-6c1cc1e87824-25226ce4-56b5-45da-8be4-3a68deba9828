@@ -38,7 +38,12 @@ export const dispatchCurrentUser = async (dispatch) => {
 }
 
 export const addLoanApplication = async (loanapplication) => {
-    return await axios.post(`${apiUrl}/api/loanapplications`, loanapplication);
+    return await axios.post(`${apiUrl}/api/loanapplications`, loanapplication,{
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("jwt_token")}`,
+            'Content-Type': 'application/json'
+        }
+    });
 }
 
 export const addFeedback = async (feedback) => {
