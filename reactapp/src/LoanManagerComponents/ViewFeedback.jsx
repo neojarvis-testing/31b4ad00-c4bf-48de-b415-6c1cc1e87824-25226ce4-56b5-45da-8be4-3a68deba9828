@@ -1,12 +1,12 @@
-import React from 'react'
-import LoanManagerNavbar from './LoanManagerNavbar'
+import React from "react";
+import LoanManagerNavbar from "./LoanManagerNavbar";
 
 export default function ViewFeedback() {
   return (
     <>
-    
-    <LoanManagerNavbar />
-    <div>ViewFeedback</div>
+      <LoanManagerNavbar />
+      <p>Feedback Updated</p>
+      <div>ViewFeedback</div>
     </>
-  )
+  );
 }
