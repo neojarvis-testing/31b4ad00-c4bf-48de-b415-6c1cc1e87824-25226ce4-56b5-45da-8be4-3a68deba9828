@@ -127,6 +127,19 @@ const LoanRequest = () => {
         isOpen={isModalOpen}
         onRequestClose={handleCancelAction}
         contentLabel="Confirm Action"
+        style={{
+          content: {
+            width: "400px",
+            height: "350px",
+            margin: "auto",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          },
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.5)"
+          }
+        }}
         >
         <h2>Are you sure you want to {action} this loan application?</h2>
         <button onClick={handleConfirmAction}>Yes</button>

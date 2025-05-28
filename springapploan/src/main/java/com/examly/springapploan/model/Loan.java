@@ -59,9 +59,9 @@ public class Loan {
 
 
     /* Added below extra */
-    @OneToMany(mappedBy = "loan")
-    private List<LoanApplication> loanApplications;
+    // @OneToMany(mappedBy = "loan")
+    // private List<LoanApplication> loanApplications;
 
-    @OneToMany(mappedBy="loan")
-    private List<Notification> notifications;
+    // @OneToMany(mappedBy="loan")
+    // private List<Notification> notifications;
 }
