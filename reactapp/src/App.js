@@ -33,8 +33,8 @@ const App = () => {
                     </Route>
                     <Route element={<PrivateRoute allowedRoles={['LOAN MANAGER']} />} >
                         <Route path="/loans" element={<ViewLoans />} />
-                        <Route path='/add-loan' element={<LoanForm /> } />
-                        <Route path='/edit-loan/:id' element={<LoanForm />} />
+                        <Route path='/loan-form' element={<LoanForm /> } />
+                        <Route path='/loan-form/:id' element={<LoanForm />} />
                         <Route path="/loan-request" element={<LoanRequest />} />
                         <Route path="/loandisbursement" element={<ViewLoanDisbursements />} />
                         <Route path="/add-disbursement" element={<LoanDisbursementForm />} />

@@ -42,10 +42,7 @@ const ViewLoans = () => {
   //   setIsModalOpen(true);
   // };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedLoan(null);
-  };
+  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error... {error}</p>;
@@ -55,7 +52,7 @@ const ViewLoans = () => {
       <LoanManagerNavbar />
       <div style={{ padding: "20px" }}>
         <h1>Loan Requests</h1>``
-        <Link to="/add-loan">
+        <Link to="/loan-form">
           <button>Add New Loan</button>
         </Link>
         <table
@@ -100,12 +97,12 @@ const ViewLoans = () => {
                 <td>{loan.latePaymentFee}</td>
 
                 <td>
-                  <Link to={`/edit-loan/${loan.id}`}>
+                  <Link to={`/loan-form/${loan.loanId}`}>
                     <button className="warn">Edit</button>
                   </Link>
                   <button
                     className="danger"
-                    onClick={() => handleDelete(loan.id)}
+                    onClick={() => handleDelete(loan.loanId)}
                   >
                     Delete
                   </button>

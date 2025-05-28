@@ -1,6 +1,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import LoanManagerNavbar from "./LoanManagerNavbar";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -45,80 +47,91 @@ const LoanForm = ({ initialValues, onSubmit }) => {
   };
 
   return (
-    <Formik
-      initialValues={defaultValues}
-      validationSchema={validationSchema}
-      enableReinitialize
-      onSubmit={onSubmit}
-    >
-      <Form style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
-        <h2>{initialValues ? "Edit Loan Product" : "Add Loan Product"}</h2>
+    <>
+      <LoanManagerNavbar />
+      <Formik
+        initialValues={defaultValues}
+        validationSchema={validationSchema}
+        enableReinitialize
+        onSubmit={onSubmit}
+      >
+        <Form style={{ maxWidth: 600, margin: "auto", padding: 20 }}>
+          <h2>{initialValues ? "Edit Loan Product" : "Add Loan Product"}</h2>
 
-        {[
-          { name: "loanType", label: "Loan Type", type: "text" },
-          { name: "interestRate", label: "Interest Rate (%)", type: "number" },
-          {
-            name: "minLoanAmount",
-            label: "Minimum Loan Amount",
-            type: "number",
-          },
-          {
-            name: "maxLoanAmount",
-            label: "Maximum Loan Amount",
-            type: "number",
-          },
-          {
-            name: "minTenure",
-            label: "Minimum Tenure (Months)",
-            type: "number",
-          },
-          {
-            name: "maxTenure",
-            label: "Maximum Tenure (Months)",
-            type: "number",
-          },
-          { name: "processingFee", label: "Processing Fee", type: "number" },
-          {
-            name: "prePaymentPenalty",
-            label: "Pre Payment Penalty",
-            type: "number",
-          },
-          {
-            name: "gracePeriod",
-            label: "Grace Period (Months)",
-            type: "number",
-          },
-          { name: "latePaymentFee", label: "Late Payment Fee", type: "number" },
-        ].map((field) => (
-          <div key={field.name} style={{ marginBottom: 15 }}>
-            <label htmlFor={field.name}>{field.label}</label>
-            <Field type={field.type} id={field.name} name={field.name} />
-            <ErrorMessage name={field.name} component="div" className="error" />
+          {[
+            { name: "loanType", label: "Loan Type", type: "text" },
+            { name: "interestRate", label: "Interest Rate (%)", type: "number" },
+            {
+              name: "minLoanAmount",
+              label: "Minimum Loan Amount",
+              type: "number",
+            },
+            {
+              name: "maxLoanAmount",
+              label: "Maximum Loan Amount",
+              type: "number",
+            },
+            {
+              name: "minTenure",
+              label: "Minimum Tenure (Months)",
+              type: "number",
+            },
+            {
+              name: "maxTenure",
+              label: "Maximum Tenure (Months)",
+              type: "number",
+            },
+            { name: "processingFee", label: "Processing Fee", type: "number" },
+            {
+              name: "prePaymentPenalty",
+              label: "Pre Payment Penalty",
+              type: "number",
+            },
+            {
+              name: "gracePeriod",
+              label: "Grace Period (Months)",
+              type: "number",
+            },
+            { name: "latePaymentFee", label: "Late Payment Fee", type: "number" },
+          ].map((field) => (
+            <div key={field.name} style={{ marginBottom: 15 }}>
+              <label htmlFor={field.name}>{field.label}</label>
+              <Field type={field.type} id={field.name} name={field.name} />
+              <ErrorMessage name={field.name} component="div" className="error" />
+            </div>
+          ))}
+
+          <div style={{ marginBottom: 15 }}>
+            <label htmlFor="description">Description</label>
+            <Field as="textarea" id="description" name="description" />
+            <ErrorMessage name="description" component="div" className="error" />
           </div>
-        ))}
 
-        <div style={{ marginBottom: 15 }}>
-          <label htmlFor="description">Description</label>
-          <Field as="textarea" id="description" name="description" />
-          <ErrorMessage name="description" component="div" className="error" />
-        </div>
+          <div style={{ marginBottom: 20 }}>
+            <label htmlFor="status">Status</label>
+            <Field as="select" id="status" name="status">
+              <option value="">Select status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </Field>
+            <ErrorMessage name="status" component="div" className="error" />
+          </div>
 
-        <div style={{ marginBottom: 20 }}>
-          <label htmlFor="status">Status</label>
-          <Field as="select" id="status" name="status">
-            <option value="">Select status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </Field>
-          <ErrorMessage name="status" component="div" className="error" />
-        </div>
-
-        <button type="submit">
-          {initialValues ? "Update" : "Create"} Loan Product
-        </button>
-      </Form>
-    </Formik>
+          <button type="submit">
+            {initialValues ? "Update" : "Create"} Loan Product
+          </button>
+        </Form>
+      </Formik>
+    </>
   );
 };
+
+
+
+const LoanFormPage = () => {
+  const {id} = useParams();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("jwt_token");
+}
 
 export default LoanForm;
