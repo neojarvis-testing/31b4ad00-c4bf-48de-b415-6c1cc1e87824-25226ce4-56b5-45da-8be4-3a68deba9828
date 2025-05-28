@@ -1,0 +1,18 @@
+th {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.danger {
+    background-color: red;
+}
+
+.warn {
+    background-color: rgb(197, 197, 66);
+}

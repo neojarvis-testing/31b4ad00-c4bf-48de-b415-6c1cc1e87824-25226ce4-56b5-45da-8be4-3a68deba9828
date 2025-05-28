@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "./LoanRequest.css";
+import LoanManagerNavbar from "./LoanManagerNavbar";
 
 // Sample Loan Applications (In a real app, this would come from an API)
 const sampleApplications = [
@@ -80,6 +81,8 @@ const LoanRequest = () => {
   };
 
   return (
+    <>
+    <LoanManagerNavbar />
     <div>
       <h1>Loan Requests</h1>
       <table>
@@ -124,7 +127,7 @@ const LoanRequest = () => {
         isOpen={isModalOpen}
         onRequestClose={handleCancelAction}
         contentLabel="Confirm Action"
-      >
+        >
         <h2>Are you sure you want to {action} this loan application?</h2>
         <button onClick={handleConfirmAction}>Yes</button>
         <button onClick={handleCancelAction}>No</button>
@@ -150,6 +153,7 @@ const LoanRequest = () => {
         </div>
       )}
     </div>
+      </>
   );
 };
 

@@ -17,6 +17,7 @@ import CustomerMyFeedback from './CustomerComponents/CustomerMyFeedback';
 import ViewFeedback from './LoanManagerComponents/ViewFeedback';
 import LoanForm from './LoanManagerComponents/LoanForm';
 import ViewLoans from './LoanManagerComponents/ViewLoans';
+import ViewLoanDisbursements from './LoanManagerComponents/ViewLoanDisbursement';
 
 const App = () => {
     return (
@@ -32,8 +33,12 @@ const App = () => {
                     </Route>
                     <Route element={<PrivateRoute allowedRoles={['LOAN MANAGER']} />} >
                         <Route path="/loans" element={<ViewLoans />} />
+                        <Route path='/add-loan' element={<LoanForm /> } />
+                        <Route path='/edit-loan/:id' element={<LoanForm />} />
                         <Route path="/loan-request" element={<LoanRequest />} />
-                        <Route path="/loandisbursement" element={<LoanDisbursementForm />} />
+                        <Route path="/loandisbursement" element={<ViewLoanDisbursements />} />
+                        <Route path="/add-disbursement" element={<LoanDisbursementForm />} />
+                        <Route path="/edit-disbursement/*" element={<LoanDisbursementForm />} />
                         <Route path='/feedback' element={<ViewFeedback />} />
                     </Route>
                     <Route element={<PrivateRoute allowedRoles={['CUSTOMER']} />}>
