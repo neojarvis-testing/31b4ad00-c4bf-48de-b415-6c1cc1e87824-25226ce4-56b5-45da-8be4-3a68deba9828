@@ -20,11 +20,11 @@ const LoanApplicationForm = () => {
     console.log("base64STring::", base64STring, loan);
     if (base64STring) {
       console.log("User::", loan, base64STring);
-      // const loanBody = constructPostLoanBody(loan, base64STring);
-      // const loanApplication = await addLoanApplication(loanBody);
-      // if (loanApplication.status === "success") {
-      //   navigate("/loans")
-      // }
+      const loanBody = constructPostLoanBody(loan, base64STring);
+      const loanApplication = await addLoanApplication(loanBody);
+      if (loanApplication.status === "success") {
+        navigate("/loans")
+      }
       setPopup(true);
     }
   }

@@ -11,16 +11,11 @@ const Signup = () => {
 
   const handleSubmit = async (user) => {
 
-    const {role, ...rest} = user;
-    const {email, ... restFields} = user;
-    const updatedUser = {userRole: role, emailId: email, ...rest};
-
-    console.log("Registered::", updatedUser);
+    console.log("Registered::", user);
     // navigate("/");
-    
-    const userRegistered=await registerUser(updatedUser);
+    const userRegistered=await registerUser(user);
     console.log(userRegistered);
-    if(userRegistered==="OK"){
+    if(userRegistered.data==="OK"){
       alert("User Registered Successfully");
       navigate("/");
     }else{
@@ -30,20 +25,20 @@ const Signup = () => {
 
   const initialValues={
     userName: '',
-    email: '',
+    emailId: '',
     mobileNumber: '',
     password: '',
     confirmPassword: '',
-    role: ''
+    userRole: ''
   }
 
   const yupObject={
     userName: Yup.string().required('User Name is required'),
-    email: Yup.string().email('Please enter a valid email address').required('Email is required'),
+    emailId: Yup.string().email('Please enter a valid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be atleast 6 characters').required('Password is required'),
     mobileNumber: Yup.string().length(10, "Mobile Number must be exactly 10 charcters").required("Mobile Number is required"),
     confirmPassword: Yup.string().required("Confirm Password is required").oneOf([Yup.ref('password')], 'Passwords must match'),
-    role: Yup.string().required('Role is required')
+    userRole: Yup.string().required('Role is required')
   }
 
   const formik= FormValidations(initialValues,yupObject,handleSubmit);
@@ -61,8 +56,8 @@ const Signup = () => {
         </div>
         <div className='form-group'>
           <label>Email <span className='error'>*</span></label>
-          <input name="email" placeholder='Email' type='email' value={formik.values.email} onChange={formik.handleChange} onBlur={formik.handleBlur} />
-          {formik.touched.email && formik.errors.email && <span className='errorMessage'>{formik.errors.email}</span>}
+          <input name="emailId" placeholder='Email' type='email' value={formik.values.emailId} onChange={formik.handleChange} onBlur={formik.handleBlur} />
+          {formik.touched.emailId && formik.errors.emailId && <span className='errorMessage'>{formik.errors.emailId}</span>}
         </div>
         <div className='form-group'>
           <label>Mobile Number <span className='error'>*</span></label>
@@ -81,13 +76,13 @@ const Signup = () => {
         </div>
         <div className='form-group'>
           <label>Role <span className='error'>*</span></label>
-          <select name="role" placeholder='Role' value={formik.values.role} onChange={formik.handleChange} onBlur={formik.handleBlur}>
+          <select name="userRole" placeholder='Role' value={formik.values.userRole} onChange={formik.handleChange} onBlur={formik.handleBlur}>
             <option value="">Select Role</option>
             <option value="CUSTOMER">Customer</option>
             <option value="LOAN MANAGER">Loan Manager</option>
             <option value="BRANCH MANAGER">Branch Manager</option>
           </select>
-          {formik.touched.role && formik.errors.role && <span className='errorMessage'>{formik.errors.role}</span>}
+          {formik.touched.userRole && formik.errors.userRole && <span className='errorMessage'>{formik.errors.userRole}</span>}
         </div>
         <button className='submit-button'>Submit</button>
         <p>Already have an account?<span className='login-link'><a href="/">Login</a></span></p>

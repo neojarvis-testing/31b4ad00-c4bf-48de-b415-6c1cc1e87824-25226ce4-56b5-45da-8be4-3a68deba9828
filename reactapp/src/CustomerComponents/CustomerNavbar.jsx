@@ -3,7 +3,7 @@ import './CustomerNavbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../slice/userSlice';
-import LoanApplicationForm from './LoanApplicationForm';
+import { userInfo } from '../Components/PrivateRoute';
 
 const CustomerNavbar = () => {
 
@@ -26,7 +26,7 @@ const CustomerNavbar = () => {
           <Link to='/home' className='app'>LoanVault</Link>
         </div>
         <div className='user-details'>
-          <p></p>
+          <p>{userInfo()?.email} - {userInfo()?.role}</p>
         </div>
         <div className='navbar-align'>
           <ul>
