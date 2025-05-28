@@ -1,0 +1,33 @@
+/* Basic Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th,
+table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-content {
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.modal-content button {
+  margin-top: 10px;
+}

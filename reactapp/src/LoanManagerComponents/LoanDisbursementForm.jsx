@@ -1,99 +1,95 @@
-import React from 'react'
-import LoanManagerNavbar from './LoanManagerNavbar'
-import * as Yup from 'yup'
-import {Formik, Form, Field, ErrorMessage} from 'formik';
+// LoanDisbursementForm.jsx
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-const LoanDisbursementForm = () => {
-  return (
-    <>
-      <LoanManagerNavbar />
-      <InitialForm />
-    </>
-  )
-}
-
-const methodOptions = ['Cash', 'Check', 'Bank Transfer'];
-
-
+// Validation Schema using Yup
 const validationSchema = Yup.object({
-  disbursementDate: Yup.date().required("Choose the date"),
-  disbursementAmount: Yup.number().positive('choose correct amount')
-  .required('enter the amount'),
-  disbursementMethod: Yup.string().oneOf(methodOptions, "Invalid method").required("choose the method"),
-  remarks: Yup.string().max(200, 'Remarks cannot exceed 200 characters long').required('enter the remarks'),
+  disbursementDate: Yup.date()
+    .min(new Date(), "Disbursement date can't be in the past")
+    .required("Disbursement date is required"),
+  disbursementAmount: Yup.number()
+    .min(1, "Amount must be between 1 and 10,000,000,000")
+    .max(10000000000, "Amount must be between 1 and 10,000,000,000")
+    .required("Disbursement amount is required"),
+  remarks: Yup.string().required("Remarks are required"),
+  method: Yup.string()
+    .oneOf(["Cash", "Check", "Bank Transfer"], "Invalid payment method")
+    .required("Payment method is required"),
 });
 
-const InitialForm = () => {
+const LoanDisbursementForm = ({ disbursement, onSave, onClose }) => {
+  const initialValues = disbursement || {
+    disbursementDate: "",
+    disbursementAmount: "",
+    remarks: "",
+    method: "",
+  };
+
   return (
-    <Formik initialValues={{
-      disbursementDate: '',
-      disbursementAmount: '',
-      disbursementMethod: '',
-      remarks: ''
-    }}
+    <div>
+      <h2>
+        {disbursement ? "Edit Loan Disbursement" : "Add Loan Disbursement"}
+      </h2>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSave}
+      >
+        <Form>
+          <div>
+            <label htmlFor="disbursementDate">Disbursement Date</label>
+            <Field type="date" id="disbursementDate" name="disbursementDate" />
+            <ErrorMessage
+              name="disbursementDate"
+              component="div"
+              className="error"
+            />
+          </div>
 
-    validationSchema={validationSchema}
-    onSubmit={(values, {setSubmitting}) => {
-      alert("form data", values)
-      setSubmitting(false);
-    }}>
+          <div>
+            <label htmlFor="disbursementAmount">Disbursement Amount</label>
+            <Field
+              type="number"
+              id="disbursementAmount"
+              name="disbursementAmount"
+            />
+            <ErrorMessage
+              name="disbursementAmount"
+              component="div"
+              className="error"
+            />
+          </div>
 
-    {({isSubmitting}) => (
+          <div>
+            <label htmlFor="remarks">Remarks</label>
+            <Field type="text" id="remarks" name="remarks" />
+            <ErrorMessage name="remarks" component="div" className="error" />
+          </div>
 
-      <div style={{display:'flex', flexDirection:'column', justifyContent:'space-between', minHeight:'800px', maxWidth: '600px', margin: '80px auto 0', padding: '2rem', border: '1px solid #ccc', borderRadius:'8px', backgroundColor: '#f9f9f9'}}>
-
-      <Form>
-        <div style={{marginBottom: "1.5rem"}}>
-          <label htmlFor="disbursementDate">Disbursement Date</label>
-          <Field type="date" name="disbursementDate" />
-          <ErrorMessage name='disbursementDate' component="div" className='error' />
-        </div>
-
-        <div style={{marginBottom: "1.5rem"}}>
-          <label htmlFor="disbursementAmount">Disbursement Amount</label>
-          <Field type="number" name="disbursementAmount" />
-          <ErrorMessage name='disbursementAmount' component="div" className='error' />
-        </div>
-
-        <div style={{marginBottom: "1.5rem"}}>
-            <label htmlFor="disbursementMethod">Disbursement Method</label>
-            <Field as="select" name="disbursementMethod" >
-              <option value="" disabled>Select Method</option>
-              {
-                methodOptions.map((method,index) => (
-                  <option key={index} value={method}>
-                    {method}
-                  </option>
-                ))
-              }
+          <div>
+            <label htmlFor="method">Disbursement Method</label>
+            <Field as="select" id="method" name="method">
+              <option value="">Select Method</option>
+              <option value="Cash">Cash</option>
+              <option value="Check">Check</option>
+              <option value="Bank Transfer">Bank Transfer</option>
             </Field>
-            <ErrorMessage name='disbursementMethod' component="div" className='error' />
-          
-        </div>
+            <ErrorMessage name="method" component="div" className="error" />
+          </div>
 
-
-        <div style={{marginBottom: "1.5rem"}}>
-          <label htmlFor="remarks">Remarks</label>
-          <Field as="textarea"
-          rows="5"
-          cols="50"
-          name="remarks" 
-          style={{resize: 'vertical'}}
-          />
-          <ErrorMessage name='remarks' component="div" className='error' />
-        </div>
-
-
-        <button type='submit' disabled={isSubmitting}>Submit</button>
-      </Form>
-      </div>
-    )}
-    </Formik>
+          <div>
+            <button type="submit">
+              {disbursement ? "Update" : "Add"} Disbursement
+            </button>
+            <button type="button" onClick={onClose}>
+              Back
+            </button>
+          </div>
+        </Form>
+      </Formik>
+    </div>
   );
-}
+};
 
-
-
-
-export default LoanDisbursementForm
-
+export default LoanDisbursementForm;
