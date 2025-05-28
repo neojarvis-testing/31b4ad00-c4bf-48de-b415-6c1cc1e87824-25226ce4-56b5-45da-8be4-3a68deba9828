@@ -42,9 +42,9 @@ const CustomerPostFeedback = () => {
     formik.resetForm();
   }
 
-  useEffect(() => {
-    dispatchCurrentUser(dispatch);
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatchCurrentUser(dispatch);
+  // }, [dispatch])
   return (
     <div>
       <CustomerNavbar />

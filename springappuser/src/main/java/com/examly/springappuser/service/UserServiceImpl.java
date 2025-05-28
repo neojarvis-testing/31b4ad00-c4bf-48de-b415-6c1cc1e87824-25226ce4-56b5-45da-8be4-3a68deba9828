@@ -41,7 +41,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User registerUser(User user){
+    public String registerUser(User user){
+        Optional<User> checkUser=userRepo.findByEmailId(user.getEmailId());
         if(!Arrays.asList(roles).contains(user.getUserRole())){
             throw new IllegalArgumentException("Invalid user role");
         }
@@ -50,7 +51,13 @@ public class UserServiceImpl implements UserService{
         || user.getPassword()==null || user.getMobileNumber()==null || user.getUserRole()==null){
             throw new RuntimeException("Missing Required Field");
         }
-        return userRepo.save(user);
+        if(checkUser.isEmpty()){
+            userRepo.save(user);
+            return "User Registered Successfully";
+        }else{
+            return "User Already Exists";
+        }
+        
     }
 
     @Override

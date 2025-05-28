@@ -7,7 +7,7 @@ import com.examly.springappuser.model.LoginDTO;
 
 public interface UserService {
 
-   User registerUser(User user);
+   String registerUser(User user);
 
    Map<String,Object> loginUserByEmailId(LoginDTO loginDTO);
 

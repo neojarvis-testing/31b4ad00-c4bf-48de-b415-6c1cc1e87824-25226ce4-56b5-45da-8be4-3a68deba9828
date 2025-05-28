@@ -31,8 +31,12 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody User user){
         System.out.println("request received");
         try{
-            userService.registerUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+            String status= userService.registerUser(user);
+            if(status=="User Registered Successfully"){
+                return ResponseEntity.status(HttpStatus.CREATED).body("OK");
+            }else{
+                return ResponseEntity.status(400).body("User Already Exists");
+            }
         }
         catch(IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());

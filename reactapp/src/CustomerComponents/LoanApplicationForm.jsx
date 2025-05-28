@@ -7,22 +7,25 @@ import './LoanApplicationForm.css';
 import { useNavigate } from 'react-router-dom';
 import { constructPostLoanBody } from '../helpers/apiHelper';
 import { addLoanApplication } from '../apiConfig';
+import './CustomerPostFeedback.css';
 
 const LoanApplicationForm = () => {
 
   const [base64STring, setBase64String] = useState('');
   const [fileName, setFileName] = useState();
   const navigate = useNavigate();
+  const [popup, setPopup] = useState(false);
 
   const handleSubmit = async (loan) => {
     console.log("base64STring::", base64STring, loan);
     if (base64STring) {
       console.log("User::", loan, base64STring);
-      const loanBody = constructPostLoanBody(loan, base64STring);
-      const loanApplication = await addLoanApplication(loanBody);
-      if (loanApplication.status === "success") {
-        navigate("/loans")
-      }
+      // const loanBody = constructPostLoanBody(loan, base64STring);
+      // const loanApplication = await addLoanApplication(loanBody);
+      // if (loanApplication.status === "success") {
+      //   navigate("/loans")
+      // }
+      setPopup(true);
     }
   }
 
@@ -57,6 +60,11 @@ const LoanApplicationForm = () => {
       }
       reader.readAsDataURL(file);
     }
+  }
+
+  const handleClose = () => {
+    setPopup(false);
+    navigate("/loans")
   }
 
   return (
@@ -102,6 +110,12 @@ const LoanApplicationForm = () => {
           <button className='login-button' type='submit'>Submit</button>
         </form>
       </div>
+      {popup && <div id="popup" className="popup">
+        <div className='popup-content' style={{display:"flex", flexDirection:"column"}}>
+          <h2>Successfully Added</h2>
+          <span style={{ color: "#333" }} onClick={handleClose} className='close'>&times;</span>
+        </div>
+      </div>}
     </div>
   )
 }

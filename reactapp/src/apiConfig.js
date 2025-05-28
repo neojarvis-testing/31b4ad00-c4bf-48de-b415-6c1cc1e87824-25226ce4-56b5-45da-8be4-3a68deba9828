@@ -69,3 +69,48 @@ export const getFeedbacksByUserId = async (userId) => {
         }
     })
 }
+
+export const deleteFeedback = async (feedbackId) => {
+    return await axios.delete(`${apiUrl}/api/feedback/${feedbackId}`)
+}
+
+export const getLoans = async (token) => {
+    return await axios.get(`${apiUrl}/api/loans`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export const getLoanApplicationsByUserId = async (userId) => {
+    return await axios.get(`${apiUrl}/api/loanapplications/user/${userId}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export const viewLoanApplicationById = async (loanId) => {
+    return await axios.get(`${apiUrl}/api/loanapplications/${loanId}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export const updateLoanApplication = async (loanId, loanApplicationBody) => {
+    return await axios.put(`${apiUrl}/api/loanapplications/${loanId}`, loanApplicationBody)
+}
+
+export const deleteLoanApplication = async (loanId) => {
+    return await axios.delete(`${apiUrl}/api/loanapplications/${loanId}`)
+}
+
+export const getAllNotifications = async () => {
+    return await axios.get(`${apiUrl}/api/notifications`)
+}
+
+export const updateNotification = async (notificationId, notificationBody) => {
+    return await axios.put(`${apiUrl}/api/notification/${notificationId}`, notificationBody)
+}
