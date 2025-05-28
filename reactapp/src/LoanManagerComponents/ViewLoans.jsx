@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import LoanForm from "./LoanForm";
-import './ViewLoans.css'
-import LoanManagerNavbar from "./LoanManagerNavbar"
-import './ViewLoans.css'
+import "./ViewLoans.css";
+import LoanManagerNavbar from "./LoanManagerNavbar";
+import "./ViewLoans.css";
 import { getLoans } from "../apiConfig";
 
 // Sample Loan Data (In real app, this should come from API or context)
@@ -23,13 +23,12 @@ const ViewLoans = () => {
         setLoans(response.data);
       } catch (error) {
         setError(error.response?.data?.message || "Failed to fetch loan data");
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
     fetchLoans();
-  }, [token])
+  }, [token]);
 
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,10 +45,10 @@ const ViewLoans = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedLoan(null);
-  }
+  };
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error... {error}</p>
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error... {error}</p>;
 
   return (
     <>
@@ -61,7 +60,11 @@ const ViewLoans = () => {
         </Link>
         <table
           className="loan-table"
-          style={{ width: "100%", marginTop: "20px", borderCollapse: "collapse" }}
+          style={{
+            width: "100%",
+            marginTop: "20px",
+            borderCollapse: "collapse",
+          }}
         >
           <thead>
             <tr>
@@ -77,7 +80,7 @@ const ViewLoans = () => {
               <th>Pre Payment Penalty</th>
               <th>Grace Period (Months)</th>
               <th>Late Payment Fee</th>
-              <th style={{width: "220px"}}>Actions</th>
+              <th style={{ width: "220px" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -97,18 +100,21 @@ const ViewLoans = () => {
                 <td>{loan.latePaymentFee}</td>
 
                 <td>
-                  
                   <Link to={`/edit-loan/${loan.id}`}>
                     <button className="warn">Edit</button>
                   </Link>
-                  <button className="danger" onClick={() => handleDelete(loan.id)}>Delete</button>
+                  <button
+                    className="danger"
+                    onClick={() => handleDelete(loan.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
-      </div >
+      </div>
     </>
   );
 };
