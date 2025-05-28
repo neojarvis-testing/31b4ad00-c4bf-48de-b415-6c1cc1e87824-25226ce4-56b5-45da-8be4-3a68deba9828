@@ -10,15 +10,22 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (user) => {
-    console.log("Registered::", user);
-    navigate("/");
-    // const userRegistered=await registerUser(user);
-    // if(userRegistered==="OK"){
-    //   alert("User Registered Successfully");
-    //   navigate("/");
-    // }else{
-    //   alert("Some thing went wrong");
-    // }
+
+    const {role, ...rest} = user;
+    const {email, ... restFields} = user;
+    const updatedUser = {userRole: role, emailId: email, ...rest};
+
+    console.log("Registered::", updatedUser);
+    // navigate("/");
+    
+    const userRegistered=await registerUser(updatedUser);
+    console.log(userRegistered);
+    if(userRegistered==="OK"){
+      alert("User Registered Successfully");
+      navigate("/");
+    }else{
+      alert("Some thing went wrong");
+    }
   }
 
   const initialValues={
@@ -76,9 +83,9 @@ const Signup = () => {
           <label>Role <span className='error'>*</span></label>
           <select name="role" placeholder='Role' value={formik.values.role} onChange={formik.handleChange} onBlur={formik.handleBlur}>
             <option value="">Select Role</option>
-            <option value="Customer">Customer</option>
-            <option value="Loan Manager">Loan Manager</option>
-            <option value="Branch Manager">Branch Manager</option>
+            <option value="CUSTOMER">Customer</option>
+            <option value="LOAN MANAGER">Loan Manager</option>
+            <option value="BRANCH MANAGER">Branch Manager</option>
           </select>
           {formik.touched.role && formik.errors.role && <span className='errorMessage'>{formik.errors.role}</span>}
         </div>

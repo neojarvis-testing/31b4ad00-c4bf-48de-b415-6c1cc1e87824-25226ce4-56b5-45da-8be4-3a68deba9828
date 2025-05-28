@@ -35,6 +35,7 @@ public class ApplicationSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(Customizer.withDefaults())
             .formLogin(Customizer.withDefaults())
+            // .authorizeHttpRequests(req -> req.antMatchers("/api/notification").permitAll().anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticaionFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -1,19 +1,43 @@
 import axios from "axios";
 
-const apiUrl = "https://ide-efdaebceabafefbdaecfbbcebdabeadeba.project.examly.io/proxy/8085"
+const apiUrl = "https://8080-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io"
+
 
 export const authUser = async (userCredentials) => {
+
+
+    // const loggedInUser = await axios.post(`${apiUrl}/test`,
+    // {
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     }
+    // });
+
+    // console.log(loggedInUser);
+
+
+
+
+    console.log(userCredentials);
+    // console.log("received login call")
+    // console.log(JSON.stringify(userCredentials));
     const loggedInUser = await axios.post(`${apiUrl}/api/users/login`, JSON.stringify(userCredentials),
         {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             }
         });
+    console.log(loggedInUser);
     return loggedInUser;
 }
 
 export const registerUser = async (userDetails) => {
-    return await axios.post(`${apiUrl}/api/user/register`, userDetails);
+
+    return await axios.post(`${apiUrl}/api/user/register`, userDetails, {
+        headers: {
+            'Content-Type': "application/json",
+        }
+    });
 }
 
 export const getUserByEmailId = async (emailId) => {

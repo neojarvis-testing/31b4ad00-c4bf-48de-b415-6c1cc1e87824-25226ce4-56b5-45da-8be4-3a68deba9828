@@ -11,11 +11,23 @@ spring:
 
       globalcors:
         cors-configurations:
-          "[/**]":
+          '[/**]':
             allowedOrigins:
-              - "https://8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io"
+              # - "8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/"
+              # - "http://8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/"
+              # - "https://8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io"
+              # - "https://8081-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/"
               - "http://localhost:8085/"
+              # - "http://localhost:8081/"
+              # - "https://ide-bdcaafcceecabdaecfbbcebdabeadeba.project.examly.io/proxy/8081"
               - "http://localhost:8087/"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+            allowedHeaders: "*"
+            allowedCredentials: true
 
 eureka:
   client:

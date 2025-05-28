@@ -14,16 +14,24 @@ const Login = () => {
 
   const handleLogin = async(user) => {
     console.log("User::", user)
-      dispatch(setUserInfo({email:user.email,jwt_token:"yf74fghjd83yirefhfher754yrtfjk_fcbvfrufij"}));
+
+    const {email, ...rest} = user;
+    const updatedUser = {emailId: email, ...rest};
+
+    console.log(updatedUser);
+
+      // dispatch(setUserInfo({email:user.email,jwt_token:"yf74fghjd83yirefhfher754yrtfjk_fcbvfrufij"}));
+      // navigate("/home");
+    const isUserValid = await authUser(updatedUser);
+
+    console.log(isUserValid);
+    if(isUserValid.status==="success"){
+      dispatch(setUserInfo({email:user.email,jwt_token:isUserValid.token}));
       navigate("/home");
-    // const isUserValid = await authUser(user);
-    // if(isUserValid.status==="success"){
-    //   dispatch(setUserInfo({email:user.email,jwt_token:isUserValid.token}));
-    //   navigate("/home");
-    // }
-    // else{
-    //   alert("Invalid Credentials")
-    // }
+    }
+    else{
+      alert("Invalid Credentials")
+    }
   }
 
   const initialValues={
@@ -56,7 +64,7 @@ const Login = () => {
               <input name='password' type='password' placeholder='Password' value={formik.values.password} onChange={formik.handleChange} onBlur={formik.handleBlur} />
               {formik.touched.password && formik.errors.password && <span className='errorMessage'>{formik.errors.password}</span>}
             </div>
-            <button className='login-button'>Login</button>
+            <button className='login-button' >Login</button>
             <p>Don't have an account?<span className='signup-link'><a href="/signup">Sign Up</a></span></p>
           </form>
         </div>

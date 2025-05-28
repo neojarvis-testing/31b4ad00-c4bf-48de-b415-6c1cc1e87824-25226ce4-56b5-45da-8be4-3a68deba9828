@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import com.examly.springappuser.model.LoginDTO;
 import com.examly.springappuser.model.User;
 import com.examly.springappuser.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -18,6 +18,7 @@ public class AuthController {
 
     @PostMapping("/users/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO){
+        // System.out.println("login request received");
         try{
             return ResponseEntity.ok(userService.loginUserByEmailId(loginDTO));
         }
@@ -28,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/user/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
+        System.out.println("request received");
         try{
             userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("OK");
