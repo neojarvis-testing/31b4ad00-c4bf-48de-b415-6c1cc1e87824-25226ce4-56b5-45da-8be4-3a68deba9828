@@ -1,132 +1,115 @@
-// ViewLoans.js
+// ViewLoanRequests.jsx
 import React, { useState } from "react";
-import LoanForm from "./LoanForm";
+import { Link } from "react-router-dom";
 import Modal from "react-modal";
+import LoanForm from "./LoanForm";
 
-// Sample Loan data
+// Sample Loan Data (In real app, this should come from API)
 const sampleLoans = [
   {
     id: 1,
+    name: "John Doe",
     loanType: "Personal",
-    description: "Personal loan for home renovation",
-    interestRate: 5,
-    maximumAmount: 50000,
-    minimumAmount: 1000,
-    minimumTenureMonths: 12,
-    maximumTenureMonths: 60,
-    processingFee: 1,
-    prepaymentPenalty: 2,
-    gracePeriodMonths: 2,
-    latePaymentFee: 100,
+    amount: 10000,
+    status: "Pending",
   },
   {
     id: 2,
+    name: "Jane Smith",
     loanType: "Auto",
-    description: "Car loan",
-    interestRate: 6,
-    maximumAmount: 30000,
-    minimumAmount: 5000,
-    minimumTenureMonths: 24,
-    maximumTenureMonths: 72,
-    processingFee: 1.5,
-    prepaymentPenalty: 3,
-    gracePeriodMonths: 1,
-    latePaymentFee: 150,
+    amount: 20000,
+    status: "Pending",
+  },
+  {
+    id: 3,
+    name: "Emily Johnson",
+    loanType: "Home",
+    amount: 50000,
+    status: "Approved",
   },
 ];
 
 const ViewLoans = () => {
   const [loans, setLoans] = useState(sampleLoans);
-  const [editingLoan, setEditingLoan] = useState(null);
+  const [selectedLoan, setSelectedLoan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loanToDelete, setLoanToDelete] = useState(null);
 
-  // Open Edit Form with loan data
-  const handleEdit = (loan) => {
-    setEditingLoan(loan);
-  };
-
-  // Open Delete Confirmation Modal
-  const handleDelete = (loan) => {
-    setLoanToDelete(loan);
+  const handleViewDetails = (loan) => {
+    setSelectedLoan(loan);
     setIsModalOpen(true);
   };
 
-  // Handle Add Loan
-  const handleAdd = () => {
-    setEditingLoan(null); // Reset for Add form
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedLoan(null);
   };
 
-  // Handle Loan Delete
-  const handleConfirmDelete = () => {
-    setLoans(loans.filter((loan) => loan.id !== loanToDelete.id));
-    setIsModalOpen(false);
-    setLoanToDelete(null);
-  };
-
-  const handleCancelDelete = () => {
-    setIsModalOpen(false);
-    setLoanToDelete(null);
+  const handleDelete = (id) => {
+    setLoans(loans.filter((loan) => loan.id !== id));
   };
 
   return (
     <div>
-      <h1>View Loans</h1>
-      <button onClick={handleAdd}>Add Loan</button>
+      <h1>Loan Requests</h1>
+      <Link to="/add-loan">
+        <button>Add New Loan</button>
+      </Link>
       <table>
         <thead>
           <tr>
+            <th>Name</th>
             <th>Loan Type</th>
-            <th>Description</th>
+            <th>Amount</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {loans.map((loan) => (
             <tr key={loan.id}>
+              <td>{loan.name}</td>
               <td>{loan.loanType}</td>
-              <td>{loan.description}</td>
+              <td>{loan.amount}</td>
+              <td>{loan.status}</td>
               <td>
-                <button onClick={() => handleEdit(loan)}>Edit</button>
-                <button onClick={() => handleDelete(loan)}>Delete</button>
+                <button onClick={() => handleViewDetails(loan)}>
+                  View Details
+                </button>
+                <Link to={`/edit-loan/${loan.id}`}>
+                  <button>Edit</button>
+                </Link>
+                <button onClick={() => handleDelete(loan.id)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Open the LoanForm when editing or adding */}
-      {(editingLoan !== null || editingLoan === null) && (
-        <LoanForm
-          initialValues={
-            editingLoan || {
-              loanType: "",
-              description: "",
-              interestRate: "",
-              maximumAmount: "",
-              minimumAmount: "",
-              minimumTenureMonths: "",
-              maximumTenureMonths: "",
-              processingFee: "",
-              prepaymentPenalty: "",
-              gracePeriodMonths: "",
-              latePaymentFee: "",
-            }
-          }
-          loanToEdit={editingLoan}
-          setLoans={setLoans}
-        />
-      )}
-
-      {/* Confirmation Modal for Deletion */}
+      {/* Modal to show Loan Details */}
       <Modal
         isOpen={isModalOpen}
-        onRequestClose={handleCancelDelete}
-        contentLabel="Confirm Deletion"
+        onRequestClose={handleCloseModal}
+        contentLabel="Loan Details"
       >
-        <h2>Are you sure you want to delete this loan?</h2>
-        <button onClick={handleConfirmDelete}>Yes</button>
-        <button onClick={handleCancelDelete}>No</button>
+        {selectedLoan && (
+          <div>
+            <h2>Loan Details</h2>
+            <p>
+              <strong>Name:</strong> {selectedLoan.name}
+            </p>
+            <p>
+              <strong>Loan Type:</strong> {selectedLoan.loanType}
+            </p>
+            <p>
+              <strong>Amount:</strong> ${selectedLoan.amount}
+            </p>
+            <p>
+              <strong>Status:</strong> {selectedLoan.status}
+            </p>
+            {/* Add more fields if necessary */}
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        )}
       </Modal>
     </div>
   );

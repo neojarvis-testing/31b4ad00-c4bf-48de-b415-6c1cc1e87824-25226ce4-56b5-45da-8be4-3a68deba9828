@@ -1,197 +1,67 @@
-// LoanForm.js
-import React from "react";
+// LoanForm.jsx
+import React, { useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const LoanForm = ({ initialValues, loanToEdit, setLoans }) => {
-  // Form validation schema using Yup
-  const validationSchema = Yup.object({
-    loanType: Yup.string().required("Loan type is required"),
-    description: Yup.string().required("Description is required"),
-    interestRate: Yup.number()
-      .required("Interest rate is required")
-      .min(0, "Interest rate cannot be negative"),
-    maximumAmount: Yup.number()
-      .required("Maximum amount is required")
-      .min(1, "Maximum amount must be greater than 0"),
-    minimumAmount: Yup.number()
-      .required("Minimum amount is required")
-      .min(1, "Minimum amount must be greater than 0")
-      .max(
-        Yup.ref("maximumAmount"),
-        "Minimum amount cannot be greater than maximum amount"
-      ),
-    minimumTenureMonths: Yup.number()
-      .required("Minimum tenure in months is required")
-      .min(1, "Minimum tenure must be at least 1 month"),
-    maximumTenureMonths: Yup.number()
-      .required("Maximum tenure in months is required")
-      .min(
-        Yup.ref("minimumTenureMonths"),
-        "Maximum tenure cannot be less than minimum tenure"
-      )
-      .max(360, "Maximum tenure cannot exceed 360 months"),
-    processingFee: Yup.number()
-      .required("Processing fee is required")
-      .min(0, "Processing fee cannot be negative"),
-    prepaymentPenalty: Yup.number()
-      .required("Prepayment penalty is required")
-      .min(0, "Prepayment penalty cannot be negative"),
-    gracePeriodMonths: Yup.number()
-      .required("Grace period in months is required")
-      .min(0, "Grace period cannot be negative"),
-    latePaymentFee: Yup.number()
-      .required("Late payment fee is required")
-      .min(0, "Late payment fee cannot be negative"),
-  });
+// Validation Schema using Yup
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  loanType: Yup.string().required("Loan type is required"),
+  amount: Yup.number()
+    .min(1, "Amount should be at least 1")
+    .required("Amount is required"),
+  status: Yup.string().required("Status is required"),
+});
 
-  const handleSubmit = (values) => {
-    if (loanToEdit) {
-      // Edit the existing loan
-      setLoans((prevLoans) =>
-        prevLoans.map((loan) =>
-          loan.id === loanToEdit.id ? { ...loan, ...values } : loan
-        )
-      );
-    } else {
-      // Add a new loan
-      setLoans((prevLoans) => [...prevLoans, { ...values, id: Date.now() }]);
-    }
+const LoanForm = ({ loan, onSave }) => {
+  // Prepopulate fields when editing an existing loan
+  const initialValues = loan || {
+    name: "",
+    loanType: "",
+    amount: "",
+    status: "",
   };
 
   return (
     <div>
-      <h1>{loanToEdit ? "Edit Loan" : "Add New Loan"}</h1>
+      <h2>{loan ? "Edit Loan" : "Add Loan"}</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={onSave}
       >
         <Form>
           <div>
+            <label htmlFor="name">Name</label>
+            <Field type="text" id="name" name="name" />
+            <ErrorMessage name="name" component="div" />
+          </div>
+
+          <div>
             <label htmlFor="loanType">Loan Type</label>
             <Field type="text" id="loanType" name="loanType" />
-            <ErrorMessage name="loanType" component="div" className="error" />
+            <ErrorMessage name="loanType" component="div" />
           </div>
 
           <div>
-            <label htmlFor="description">Description</label>
-            <Field type="text" id="description" name="description" />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="error"
-            />
+            <label htmlFor="amount">Amount</label>
+            <Field type="number" id="amount" name="amount" />
+            <ErrorMessage name="amount" component="div" />
           </div>
 
           <div>
-            <label htmlFor="interestRate">Interest Rate (%)</label>
-            <Field type="number" id="interestRate" name="interestRate" />
-            <ErrorMessage
-              name="interestRate"
-              component="div"
-              className="error"
-            />
+            <label htmlFor="status">Status</label>
+            <Field as="select" id="status" name="status">
+              <option value="">Select Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </Field>
+            <ErrorMessage name="status" component="div" />
           </div>
 
           <div>
-            <label htmlFor="maximumAmount">Maximum Amount</label>
-            <Field type="number" id="maximumAmount" name="maximumAmount" />
-            <ErrorMessage
-              name="maximumAmount"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="minimumAmount">Minimum Amount</label>
-            <Field type="number" id="minimumAmount" name="minimumAmount" />
-            <ErrorMessage
-              name="minimumAmount"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="minimumTenureMonths">Minimum Tenure (Months)</label>
-            <Field
-              type="number"
-              id="minimumTenureMonths"
-              name="minimumTenureMonths"
-            />
-            <ErrorMessage
-              name="minimumTenureMonths"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="maximumTenureMonths">Maximum Tenure (Months)</label>
-            <Field
-              type="number"
-              id="maximumTenureMonths"
-              name="maximumTenureMonths"
-            />
-            <ErrorMessage
-              name="maximumTenureMonths"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="processingFee">Processing Fee</label>
-            <Field type="number" id="processingFee" name="processingFee" />
-            <ErrorMessage
-              name="processingFee"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="prepaymentPenalty">Prepayment Penalty</label>
-            <Field
-              type="number"
-              id="prepaymentPenalty"
-              name="prepaymentPenalty"
-            />
-            <ErrorMessage
-              name="prepaymentPenalty"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="gracePeriodMonths">Grace Period (Months)</label>
-            <Field
-              type="number"
-              id="gracePeriodMonths"
-              name="gracePeriodMonths"
-            />
-            <ErrorMessage
-              name="gracePeriodMonths"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="latePaymentFee">Late Payment Fee</label>
-            <Field type="number" id="latePaymentFee" name="latePaymentFee" />
-            <ErrorMessage
-              name="latePaymentFee"
-              component="div"
-              className="error"
-            />
-          </div>
-
-          <div>
-            <button type="submit">Submit</button>
+            <button type="submit">{loan ? "Update" : "Add"} Loan</button>
           </div>
         </Form>
       </Formik>

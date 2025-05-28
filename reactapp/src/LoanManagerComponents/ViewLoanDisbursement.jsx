@@ -27,28 +27,28 @@ const ViewLoanDisbursements = () => {
   const [selectedDisbursement, setSelectedDisbursement] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleViewDetails = (disbursement) => {
+    setSelectedDisbursement(disbursement);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDisbursement(null);
+  };
+
   const handleDelete = (id) => {
     setDisbursements(
       disbursements.filter((disbursement) => disbursement.id !== id)
     );
   };
 
-  const handleEdit = (disbursement) => {
-    setSelectedDisbursement(disbursement);
-  };
-
-  const handleAdd = () => {
-    setSelectedDisbursement(null); // Reset for adding a new disbursement
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <div>
       <h1>View Loan Disbursements</h1>
-      <button onClick={handleAdd}>Add New Disbursement</button>
+      <Link to="/add-disbursement">
+        <button>Add New Disbursement</button>
+      </Link>
       <table>
         <thead>
           <tr>
@@ -67,7 +67,12 @@ const ViewLoanDisbursements = () => {
               <td>{disbursement.remarks}</td>
               <td>{disbursement.method}</td>
               <td>
-                <button onClick={() => handleEdit(disbursement)}>Edit</button>
+                <button onClick={() => handleViewDetails(disbursement)}>
+                  View Details
+                </button>
+                <Link to={`/edit-disbursement/${disbursement.id}`}>
+                  <button>Edit</button>
+                </Link>
                 <button onClick={() => handleDelete(disbursement.id)}>
                   Delete
                 </button>
@@ -77,26 +82,33 @@ const ViewLoanDisbursements = () => {
         </tbody>
       </table>
 
-      <LoanDisbursementForm
-        disbursement={selectedDisbursement}
-        onClose={handleCloseModal}
-        onSave={(disbursement) => {
-          if (selectedDisbursement) {
-            // Edit existing
-            setDisbursements((prev) =>
-              prev.map((d) => (d.id === disbursement.id ? disbursement : d))
-            );
-          } else {
-            // Add new disbursement
-            setDisbursements((prev) => [
-              ...prev,
-              { ...disbursement, id: disbursements.length + 1 },
-            ]);
-          }
-          setIsModalOpen(false);
-        }}
-      />
-      <button onClick={handleCloseModal}>Back</button>
+      {/* Modal to show Disbursement Details */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Disbursement Details"
+      >
+        {selectedDisbursement && (
+          <div>
+            <h2>Disbursement Details</h2>
+            <p>
+              <strong>Date:</strong> {selectedDisbursement.disbursementDate}
+            </p>
+            <p>
+              <strong>Amount:</strong> $
+              {selectedDisbursement.disbursementAmount}
+            </p>
+            <p>
+              <strong>Remarks:</strong> {selectedDisbursement.remarks}
+            </p>
+            <p>
+              <strong>Method:</strong> {selectedDisbursement.method}
+            </p>
+            {/* Add more fields if necessary */}
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
