@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useFormik } from "formik";
 import axios from "axios";
 import LoanManagerNavbar from "./LoanManagerNavbar";
 
 const LoanRequest = () => {
-  const [loans, setLoans] = useState([]);
-  const [allLoans, setAllLoans] = useState([]); // Keep full data for filtering
-  const [loading, setLoading] = useState(true);
+  const [allLoans, setAllLoans] = useState([]);
+  const [filteredLoans, setFilteredLoans] = useState([]);
   const [selectedLoan, setSelectedLoan] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState({ status: "", loanType: "" });
+
   const pageSize = 5;
 
   const fetchLoans = async () => {
     try {
-      const response = await getLoanApplications(); // 🔁 Replace with your actual API endpoint
-      setLoans(response.data);
+      setLoading(true);
+      const response = await axios.get("/api/loans"); // 🔁 Replace with actual API
       setAllLoans(response.data);
+      setFilteredLoans(response.data);
     } catch (error) {
       console.error("Failed to fetch loans:", error);
     } finally {
@@ -29,22 +31,22 @@ const LoanRequest = () => {
     fetchLoans();
   }, []);
 
-  const formik = useFormik({
-    initialValues: {
-      status: "",
-      loanType: "",
-    },
-    onSubmit: (values) => {
-      const filtered = allLoans.filter((loan) => {
-        return (
-          (!values.status || loan.applicationStatus === values.status) &&
-          (!values.loanType || loan.loanType === values.loanType)
-        );
-      });
-      setLoans(filtered);
-      setCurrentPage(1);
-    },
-  });
+  // Auto-filter on filter change
+  useEffect(() => {
+    const filtered = allLoans.filter((loan) => {
+      return (
+        (!filters.status || loan.applicationStatus === filters.status) &&
+        (!filters.loanType || loan.loanType === filters.loanType)
+      );
+    });
+    setFilteredLoans(filtered);
+    setCurrentPage(1);
+  }, [filters, allLoans]);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSort = (field) => {
     const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
@@ -53,27 +55,27 @@ const LoanRequest = () => {
   };
 
   const sortedLoans = useMemo(() => {
-    if (!sortField) return loans;
-    return [...loans].sort((a, b) => {
+    if (!sortField) return filteredLoans;
+    return [...filteredLoans].sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
-  }, [loans, sortField, sortOrder]);
+  }, [filteredLoans, sortField, sortOrder]);
 
   const paginatedLoans = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return sortedLoans.slice(start, start + pageSize);
   }, [sortedLoans, currentPage]);
 
-  const totalPages = Math.ceil(loans.length / pageSize);
+  const totalPages = Math.ceil(filteredLoans.length / pageSize);
 
   const handleApproveReject = async (id, status) => {
     try {
-      await axios.patch(`/api/loans/${id}/status`, { status }); // 🔁 Your API endpoint
-      fetchLoans(); // Refresh data after update
+      await axios.patch(`/api/loans/${id}/status`, { status }); // 🔁 Replace with your API
+      fetchLoans(); // Refresh list
     } catch (error) {
-      console.error("Failed to update status:", error);
+      console.error("Failed to update loan status:", error);
     }
   };
 
@@ -83,33 +85,36 @@ const LoanRequest = () => {
       <div style={{ padding: "20px" }}>
         <h2>Loan Request Management</h2>
 
-        <form onSubmit={formik.handleSubmit} style={{ marginBottom: "20px" }}>
-          <label>Status:&nbsp;</label>
-          <select
-            name="status"
-            onChange={formik.handleChange}
-            value={formik.values.status}
-          >
-            <option value="">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-          &nbsp;&nbsp;&nbsp;
-          <label>Loan Type:&nbsp;</label>
-          <select
-            name="loanType"
-            onChange={formik.handleChange}
-            value={formik.values.loanType}
-          >
-            <option value="">All</option>
-            <option value="Personal">Personal</option>
-            <option value="Business">Business</option>
-            <option value="Education">Education</option>
-          </select>
-          &nbsp;&nbsp;
-          <button type="submit">Search</button>
-        </form>
+        {/* Filter Controls */}
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+          <label>
+            Status:&nbsp;
+            <select
+              name="status"
+              onChange={handleFilterChange}
+              value={filters.status}
+            >
+              <option value="">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </label>
+
+          <label>
+            Loan Type:&nbsp;
+            <select
+              name="loanType"
+              onChange={handleFilterChange}
+              value={filters.loanType}
+            >
+              <option value="">All</option>
+              <option value="Personal">Personal</option>
+              <option value="Business">Business</option>
+              <option value="Education">Education</option>
+            </select>
+          </label>
+        </div>
 
         {loading ? (
           <p>Loading loan applications...</p>
@@ -138,11 +143,11 @@ const LoanRequest = () => {
                   <tr key={loan.loanApplicationId}>
                     <td>{loan.loanApplicationId}</td>
                     <td>{loan.applicationDate}</td>
-                    <td>{loan.loanAmount}</td>
+                    <td>₹{loan.loanAmount}</td>
                     <td>{loan.tenureMonths}</td>
                     <td>{loan.applicationStatus}</td>
                     <td>{loan.employmentStatus}</td>
-                    <td>{loan.annualIncome}</td>
+                    <td>₹{loan.annualIncome}</td>
                     <td>
                       <button onClick={() => setSelectedLoan(loan)}>
                         View
@@ -172,19 +177,31 @@ const LoanRequest = () => {
                     </td>
                   </tr>
                 ))}
+                {paginatedLoans.length === 0 && (
+                  <tr>
+                    <td colSpan="8" style={{ textAlign: "center" }}>
+                      No loan applications found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
 
+            {/* Pagination Controls */}
             <div style={{ marginTop: "10px" }}>
-              Page: {currentPage} / {totalPages}
+              Page: {currentPage} / {totalPages || 1}
               &nbsp;
-              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}>
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+              >
                 Prev
               </button>
               <button
                 onClick={() =>
                   setCurrentPage((p) => Math.min(p + 1, totalPages))
                 }
+                disabled={currentPage === totalPages}
               >
                 Next
               </button>
@@ -192,6 +209,7 @@ const LoanRequest = () => {
           </>
         )}
 
+        {/* Loan Detail Modal */}
         {selectedLoan && (
           <div className="modal">
             <div className="modal-content">
@@ -219,7 +237,7 @@ const LoanRequest = () => {
                 <strong>Annual Income:</strong> ₹{selectedLoan.annualIncome}
               </p>
               <p>
-                <strong>Remarks:</strong> {selectedLoan.remarks}
+                <strong>Remarks:</strong> {selectedLoan.remarks || "-"}
               </p>
               <p>
                 <strong>Proof:</strong> {selectedLoan.proof}
@@ -228,7 +246,7 @@ const LoanRequest = () => {
                 <strong>Account Holder:</strong> {selectedLoan.accountHolder}
               </p>
               <p>
-                <strong>Account No:</strong> {selectedLoan.accountNumber}
+                <strong>Account Number:</strong> {selectedLoan.accountNumber}
               </p>
               <p>
                 <strong>IFSC Code:</strong> {selectedLoan.ifscCode}
