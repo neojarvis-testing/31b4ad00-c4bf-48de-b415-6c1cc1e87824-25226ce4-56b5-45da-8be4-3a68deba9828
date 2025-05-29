@@ -1,12 +1,10 @@
 // ViewLoanRequests.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./ViewLoans.css";
 import LoanManagerNavbar from "./LoanManagerNavbar";
 import "./ViewLoans.css";
 import { deleteLoan, getLoans } from "../apiConfig";
 
-// Sample Loan Data (In real app, this should come from API or context)
 
 const ViewLoans = () => {
   const [loans, setLoans] = useState([]);
@@ -28,8 +26,6 @@ const ViewLoans = () => {
     fetchLoans();
   }, [token]);
 
-  const [selectedLoan, setSelectedLoan] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async (loanId) => {
     const confirmDelete = window.confirm("are you sure, do you want to delete this loan");

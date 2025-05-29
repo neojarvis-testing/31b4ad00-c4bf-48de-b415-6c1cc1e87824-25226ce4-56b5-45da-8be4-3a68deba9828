@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import LoanManagerNavbar from "./LoanManagerNavbar";
+import { getLoanApplications } from "../apiConfig";
+import './LoanRequest.css'
 
 const LoanRequest = () => {
   const [loans, setLoans] = useState([]);
@@ -15,7 +17,7 @@ const LoanRequest = () => {
 
   const fetchLoans = async () => {
     try {
-      const response = await getLoanApplications(); // 🔁 Replace with your actual API endpoint
+      const response = await getLoanApplications();
       setLoans(response.data);
       setAllLoans(response.data);
     } catch (error) {
@@ -83,33 +85,39 @@ const LoanRequest = () => {
       <div style={{ padding: "20px" }}>
         <h2>Loan Request Management</h2>
 
-        <form onSubmit={formik.handleSubmit} style={{ marginBottom: "20px" }}>
-          <label>Status:&nbsp;</label>
-          <select
-            name="status"
-            onChange={formik.handleChange}
-            value={formik.values.status}
-          >
-            <option value="">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-          &nbsp;&nbsp;&nbsp;
-          <label>Loan Type:&nbsp;</label>
-          <select
-            name="loanType"
-            onChange={formik.handleChange}
-            value={formik.values.loanType}
-          >
-            <option value="">All</option>
-            <option value="Personal">Personal</option>
-            <option value="Business">Business</option>
-            <option value="Education">Education</option>
-          </select>
-          &nbsp;&nbsp;
-          <button type="submit">Search</button>
-        </form>
+        <div>
+          
+          </div>
+
+          <form onSubmit={formik.handleSubmit} style={{ marginBottom: "20px" }}>
+            <label>Status:&nbsp;</label>
+            <select
+              name="status"
+              onChange={formik.handleChange}
+              value={formik.values.status}
+              style={{ width: "380px" }}
+            >
+              <option value="">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;
+            <label>Loan Type:&nbsp;</label>
+            <select
+              style={{ width: "380px" }}
+              name="loanType"
+              onChange={formik.handleChange}
+              value={formik.values.loanType}
+            >
+              <option value="">All</option>
+              <option value="Personal">Personal</option>
+              <option value="Business">Business</option>
+              <option value="Education">Education</option>
+            </select>
+            &nbsp;&nbsp;
+            <button type="submit">Search</button>
+          </form>
 
         {loading ? (
           <p>Loading loan applications...</p>

@@ -46,6 +46,14 @@ export const addLoanApplication = async (loanapplication) => {
     });
 }
 
+
+export const getLoanApplications = async () => {
+    return await axios.get(`${apiUrl}/api/loanapplications`,{
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("jwt_token")}`
+        }
+    });
+}
 export const addFeedback = async (feedback) => {
     return await axios.post(`${apiUrl}/api/feedback`, feedback);
 }
