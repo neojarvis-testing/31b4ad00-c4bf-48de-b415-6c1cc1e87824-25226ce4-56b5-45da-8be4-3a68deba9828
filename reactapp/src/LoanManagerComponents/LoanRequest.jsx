@@ -1,69 +1,51 @@
-import React, { useState, useMemo } from "react";
-import "./LoanRequest.css"; // Optional: for custom styling
+import React, { useState, useEffect, useMemo } from "react";
+import { useFormik } from "formik";
+import axios from "axios";
 import LoanManagerNavbar from "./LoanManagerNavbar";
 
-const mockLoanData = [
-  {
-    loanApplicationId: "LA001",
-    applicationDate: "2025-05-20",
-    loanAmount: 100000,
-    tenureMonths: 12,
-    applicationStatus: "Pending",
-    employmentStatus: "Employed",
-    annualIncome: 500000,
-    remarks: "Good profile",
-    proof: "proof.pdf",
-    accountHolder: "John Doe",
-    accountNumber: "1234567890",
-    ifscCode: "IFSC0001",
-    loanType: "Personal",
-  },
-  {
-    loanApplicationId: "LA002",
-    applicationDate: "2025-05-15",
-    loanAmount: 250000,
-    tenureMonths: 24,
-    applicationStatus: "Approved",
-    employmentStatus: "Self-Employed",
-    annualIncome: 800000,
-    remarks: "",
-    proof: "proof2.pdf",
-    accountHolder: "Jane Smith",
-    accountNumber: "0987654321",
-    ifscCode: "IFSC0002",
-    loanType: "Business",
-  },
-  // Add more mock data as needed
-];
-
 const LoanRequest = () => {
-  const [filters, setFilters] = useState({ status: "", loanType: "" });
-  const [loans, setLoans] = useState(mockLoanData);
+  const [loans, setLoans] = useState([]);
+  const [allLoans, setAllLoans] = useState([]); // Keep full data for filtering
+  const [loading, setLoading] = useState(true);
+  const [selectedLoan, setSelectedLoan] = useState(null);
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedLoan, setSelectedLoan] = useState(null);
-
   const pageSize = 5;
 
-  // Update filters and reset to page 1
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-    setCurrentPage(1);
+  const fetchLoans = async () => {
+    try {
+      const response = await getLoanApplications(); // 🔁 Replace with your actual API endpoint
+      setLoans(response.data);
+      setAllLoans(response.data);
+    } catch (error) {
+      console.error("Failed to fetch loans:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Filter loans based on filters
-  const filteredLoans = useMemo(() => {
-    return mockLoanData.filter((loan) => {
-      return (
-        (!filters.status || loan.applicationStatus === filters.status) &&
-        (!filters.loanType || loan.loanType === filters.loanType)
-      );
-    });
-  }, [filters]);
+  useEffect(() => {
+    fetchLoans();
+  }, []);
 
-  // Sorting logic
+  const formik = useFormik({
+    initialValues: {
+      status: "",
+      loanType: "",
+    },
+    onSubmit: (values) => {
+      const filtered = allLoans.filter((loan) => {
+        return (
+          (!values.status || loan.applicationStatus === values.status) &&
+          (!values.loanType || loan.loanType === values.loanType)
+        );
+      });
+      setLoans(filtered);
+      setCurrentPage(1);
+    },
+  });
+
   const handleSort = (field) => {
     const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
@@ -71,31 +53,28 @@ const LoanRequest = () => {
   };
 
   const sortedLoans = useMemo(() => {
-    if (!sortField) return filteredLoans;
-    return [...filteredLoans].sort((a, b) => {
+    if (!sortField) return loans;
+    return [...loans].sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
-  }, [filteredLoans, sortField, sortOrder]);
+  }, [loans, sortField, sortOrder]);
 
-  // Pagination
   const paginatedLoans = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return sortedLoans.slice(start, start + pageSize);
   }, [sortedLoans, currentPage]);
 
-  const totalPages = Math.ceil(filteredLoans.length / pageSize);
+  const totalPages = Math.ceil(loans.length / pageSize);
 
-  // Approve/Reject loan
-  const handleApproveReject = (id, status) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) =>
-        loan.loanApplicationId === id
-          ? { ...loan, applicationStatus: status }
-          : loan
-      )
-    );
+  const handleApproveReject = async (id, status) => {
+    try {
+      await axios.patch(`/api/loans/${id}/status`, { status }); // 🔁 Your API endpoint
+      fetchLoans(); // Refresh data after update
+    } catch (error) {
+      console.error("Failed to update status:", error);
+    }
   };
 
   return (
@@ -104,141 +83,114 @@ const LoanRequest = () => {
       <div style={{ padding: "20px" }}>
         <h2>Loan Request Management</h2>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            alignItems: "center",
-            maxWidth: "450px",
-            marginBottom: "20px",
-          }}
-        >
-          <label>
-            Status:&nbsp;
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleFilterChange}
-              style={{ minWidth: 120 }}
-            >
-              <option value="">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-          </label>
-
-          <label>
-            Loan Type:&nbsp;
-            <select
-              name="loanType"
-              value={filters.loanType}
-              onChange={handleFilterChange}
-              style={{ minWidth: 140 }}
-            >
-              <option value="">All</option>
-              <option value="Personal">Personal</option>
-              <option value="Business">Business</option>
-              <option value="Education">Education</option>
-            </select>
-          </label>
-        </div>
-
-        <table
-          border="1"
-          cellPadding="10"
-          cellSpacing="0"
-          style={{ width: "100%", cursor: "pointer" }}
-        >
-          <thead>
-            <tr>
-              <th onClick={() => handleSort("loanApplicationId")}>
-                ID{" "}
-                {sortField === "loanApplicationId"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th onClick={() => handleSort("applicationDate")}>
-                Date{" "}
-                {sortField === "applicationDate"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th onClick={() => handleSort("loanAmount")}>
-                Amount{" "}
-                {sortField === "loanAmount"
-                  ? sortOrder === "asc"
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </th>
-              <th>Tenure</th>
-              <th>Status</th>
-              <th>Employment</th>
-              <th>Income</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedLoans.map((loan) => (
-              <tr key={loan.loanApplicationId}>
-                <td>{loan.loanApplicationId}</td>
-                <td>{loan.applicationDate}</td>
-                <td>{loan.loanAmount}</td>
-                <td>{loan.tenureMonths}</td>
-                <td>{loan.applicationStatus}</td>
-                <td>{loan.employmentStatus}</td>
-                <td>{loan.annualIncome}</td>
-                <td>
-                  <button onClick={() => setSelectedLoan(loan)}>View</button>
-                  &nbsp;
-                  <button
-                    onClick={() =>
-                      handleApproveReject(loan.loanApplicationId, "Approved")
-                    }
-                  >
-                    Approve
-                  </button>
-                  &nbsp;
-                  <button
-                    onClick={() =>
-                      handleApproveReject(loan.loanApplicationId, "Rejected")
-                    }
-                  >
-                    Reject
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {paginatedLoans.length === 0 && (
-              <tr>
-                <td colSpan="8" style={{ textAlign: "center" }}>
-                  No loans found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        <div style={{ marginTop: "10px" }}>
-          Page: {currentPage} / {totalPages || 1}&nbsp;
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
+        <form onSubmit={formik.handleSubmit} style={{ marginBottom: "20px" }}>
+          <label>Status:&nbsp;</label>
+          <select
+            name="status"
+            onChange={formik.handleChange}
+            value={formik.values.status}
           >
-            Prev
-          </button>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages || totalPages === 0}
+            <option value="">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+          &nbsp;&nbsp;&nbsp;
+          <label>Loan Type:&nbsp;</label>
+          <select
+            name="loanType"
+            onChange={formik.handleChange}
+            value={formik.values.loanType}
           >
-            Next
-          </button>
-        </div>
+            <option value="">All</option>
+            <option value="Personal">Personal</option>
+            <option value="Business">Business</option>
+            <option value="Education">Education</option>
+          </select>
+          &nbsp;&nbsp;
+          <button type="submit">Search</button>
+        </form>
+
+        {loading ? (
+          <p>Loading loan applications...</p>
+        ) : (
+          <>
+            <table
+              border="1"
+              cellPadding="10"
+              cellSpacing="0"
+              style={{ width: "100%" }}
+            >
+              <thead>
+                <tr>
+                  <th onClick={() => handleSort("loanApplicationId")}>ID</th>
+                  <th onClick={() => handleSort("applicationDate")}>Date</th>
+                  <th onClick={() => handleSort("loanAmount")}>Amount</th>
+                  <th>Tenure</th>
+                  <th>Status</th>
+                  <th>Employment</th>
+                  <th>Income</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedLoans.map((loan) => (
+                  <tr key={loan.loanApplicationId}>
+                    <td>{loan.loanApplicationId}</td>
+                    <td>{loan.applicationDate}</td>
+                    <td>{loan.loanAmount}</td>
+                    <td>{loan.tenureMonths}</td>
+                    <td>{loan.applicationStatus}</td>
+                    <td>{loan.employmentStatus}</td>
+                    <td>{loan.annualIncome}</td>
+                    <td>
+                      <button onClick={() => setSelectedLoan(loan)}>
+                        View
+                      </button>
+                      &nbsp;
+                      <button
+                        onClick={() =>
+                          handleApproveReject(
+                            loan.loanApplicationId,
+                            "Approved"
+                          )
+                        }
+                      >
+                        Approve
+                      </button>
+                      &nbsp;
+                      <button
+                        onClick={() =>
+                          handleApproveReject(
+                            loan.loanApplicationId,
+                            "Rejected"
+                          )
+                        }
+                      >
+                        Reject
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ marginTop: "10px" }}>
+              Page: {currentPage} / {totalPages}
+              &nbsp;
+              <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}>
+                Prev
+              </button>
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
 
         {selectedLoan && (
           <div className="modal">
@@ -267,7 +219,7 @@ const LoanRequest = () => {
                 <strong>Annual Income:</strong> ₹{selectedLoan.annualIncome}
               </p>
               <p>
-                <strong>Remarks:</strong> {selectedLoan.remarks || "-"}
+                <strong>Remarks:</strong> {selectedLoan.remarks}
               </p>
               <p>
                 <strong>Proof:</strong> {selectedLoan.proof}
