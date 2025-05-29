@@ -22,7 +22,7 @@ const validationSchema = Yup.object({
 const LoanDisbursementForm = ({ initialValues, onSubmit, onCancel }) => {
   return (
     <>
-      <LoanManagerNavbar />
+      {/* <LoanManagerNavbar /> */}
       <Formik
         initialValues={initialValues}
         enableReinitialize
