@@ -1,33 +1,16 @@
-/* Basic Styles */
-table {
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-table th,
-table td {
-  padding: 8px;
-  text-align: left;
-  border: 1px solid #ddd;
-}
-
-button {
-  margin-right: 10px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #f0f0f0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
+  background: white;
+  margin: 10% auto;
   padding: 20px;
+  width: 50%;
   border-radius: 5px;
-  background-color: #fff;
-}
-
-.modal-content button {
-  margin-top: 10px;
 }

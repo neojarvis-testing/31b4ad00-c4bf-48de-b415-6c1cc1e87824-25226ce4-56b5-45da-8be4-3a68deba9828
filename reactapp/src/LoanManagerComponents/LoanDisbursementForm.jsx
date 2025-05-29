@@ -2,101 +2,86 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
 import LoanManagerNavbar from "./LoanManagerNavbar";
 
-// Validation Schema using Yup
+const disbursementMethods = ["Cash", "Check", "Bank Transfer"];
+
 const validationSchema = Yup.object({
   disbursementDate: Yup.date()
-    .min(new Date(), "Disbursement date can't be in the past")
-    .required("Disbursement date is required"),
+    .min(new Date().toISOString().split("T")[0], "Date must be today or future")
+    .required("Required"),
   disbursementAmount: Yup.number()
-    .min(1, "Amount must be between 1 and 10,000,000,000")
-    .max(10000000000, "Amount must be between 1 and 10,000,000,000")
-    .required("Disbursement amount is required"),
-  remarks: Yup.string().required("Remarks are required"),
-  method: Yup.string()
-    .oneOf(["Cash", "Check", "Bank Transfer"], "Invalid payment method")
-    .required("Payment method is required"),
+    .positive("Must be positive")
+    .required("Required"),
+  disbursementMethod: Yup.string()
+    .oneOf(disbursementMethods, "Invalid method")
+    .required("Required"),
+  remarks: Yup.string(),
 });
 
-const LoanDisbursementForm = ({ disbursement, onSave, onClose }) => {
-  const initialValues = disbursement || {
-    disbursementDate: "",
-    disbursementAmount: "",
-    remarks: "",
-    method: "",
-  };
-
+const LoanDisbursementForm = ({ initialValues, onSubmit, onCancel }) => {
   return (
     <>
       <LoanManagerNavbar />
-      <div>
-        <h2>
-          {disbursement ? "Edit Loan Disbursement" : "Add Loan Disbursement"}
-        </h2>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSave}
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        <Form
+          style={{ border: "1px solid #ccc", padding: 20, marginBottom: 20 }}
         >
-          <Form>
-            <div>
-              <label htmlFor="disbursementDate">Disbursement Date</label>
-              <Field type="date" id="disbursementDate" name="disbursementDate" />
-              <ErrorMessage
-                name="disbursementDate"
-                component="div"
-                className="error"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="disbursementAmount">Disbursement Amount</label>
-              <Field
-                type="number"
-                id="disbursementAmount"
-                name="disbursementAmount"
-              />
-              <ErrorMessage
-                name="disbursementAmount"
-                component="div"
-                className="error"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="remarks">Remarks</label>
-              <Field type="text" id="remarks" name="remarks" />
-              <ErrorMessage name="remarks" component="div" className="error" />
-            </div>
-
-            <div>
-              <label htmlFor="method">Disbursement Method</label>
-              <Field as="select" id="method" name="method">
-                <option value="">Select Method</option>
-                <option value="Cash">Cash</option>
-                <option value="Check">Check</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-              </Field>
-              <ErrorMessage name="method" component="div" className="error" />
-            </div>
-
-            <div>
-              <button type="submit">
-                {disbursement ? "Update" : "Add"} Disbursement
-              </button>
-              <button type="button" onClick={onClose}>
-
-                <Link to="/loandisbursement">
-
-                  Back
-                </Link>
-              </button>
-            </div>
-          </Form>
-        </Formik>
-      </div>
+          <div>
+            <label>Disbursement Date:</label>
+            <br />
+            <Field type="date" name="disbursementDate" />
+            <ErrorMessage
+              name="disbursementDate"
+              component="div"
+              style={{ color: "red" }}
+            />
+          </div>
+          <div>
+            <label>Disbursement Amount:</label>
+            <br />
+            <Field type="number" name="disbursementAmount" />
+            <ErrorMessage
+              name="disbursementAmount"
+              component="div"
+              style={{ color: "red" }}
+            />
+          </div>
+          <div>
+            <label>Method:</label>
+            <br />
+            <Field as="select" name="disbursementMethod">
+              <option value="">Select</option>
+              {disbursementMethods.map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
+              ))}
+            </Field>
+            <ErrorMessage
+              name="disbursementMethod"
+              component="div"
+              style={{ color: "red" }}
+            />
+          </div>
+          <div>
+            <label>Remarks:</label>
+            <br />
+            <Field as="textarea" name="remarks" rows={3} />
+          </div>
+          <br />
+          <button type="submit">Save</button>
+          &nbsp;
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </Form>
+      </Formik>
     </>
   );
 };
