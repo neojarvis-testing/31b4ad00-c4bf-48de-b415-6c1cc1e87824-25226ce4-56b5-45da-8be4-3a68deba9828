@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import { useFormik } from "formik";
 import "./LoanRequest.css"; // Optional: for custom styling
 import LoanManagerNavbar from "./LoanManagerNavbar";
 
@@ -38,6 +37,7 @@ const mockLoanData = [
 ];
 
 const LoanRequest = () => {
+  const [filters, setFilters] = useState({ status: "", loanType: "" });
   const [loans, setLoans] = useState(mockLoanData);
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -46,23 +46,24 @@ const LoanRequest = () => {
 
   const pageSize = 5;
 
-  const formik = useFormik({
-    initialValues: {
-      status: "",
-      loanType: "",
-    },
-    onSubmit: (values) => {
-      const filtered = mockLoanData.filter((loan) => {
-        return (
-          (!values.status || loan.applicationStatus === values.status) &&
-          (!values.loanType || loan.loanType === values.loanType)
-        );
-      });
-      setLoans(filtered);
-      setCurrentPage(1);
-    },
-  });
+  // Update filters and reset to page 1
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+    setCurrentPage(1);
+  };
 
+  // Filter loans based on filters
+  const filteredLoans = useMemo(() => {
+    return mockLoanData.filter((loan) => {
+      return (
+        (!filters.status || loan.applicationStatus === filters.status) &&
+        (!filters.loanType || loan.loanType === filters.loanType)
+      );
+    });
+  }, [filters]);
+
+  // Sorting logic
   const handleSort = (field) => {
     const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
@@ -70,28 +71,31 @@ const LoanRequest = () => {
   };
 
   const sortedLoans = useMemo(() => {
-    if (!sortField) return loans;
-    return [...loans].sort((a, b) => {
+    if (!sortField) return filteredLoans;
+    return [...filteredLoans].sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
-  }, [loans, sortField, sortOrder]);
+  }, [filteredLoans, sortField, sortOrder]);
 
+  // Pagination
   const paginatedLoans = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return sortedLoans.slice(start, start + pageSize);
   }, [sortedLoans, currentPage]);
 
-  const totalPages = Math.ceil(loans.length / pageSize);
+  const totalPages = Math.ceil(filteredLoans.length / pageSize);
 
+  // Approve/Reject loan
   const handleApproveReject = (id, status) => {
-    const updated = loans.map((loan) =>
-      loan.loanApplicationId === id
-        ? { ...loan, applicationStatus: status }
-        : loan
+    setLoans((prevLoans) =>
+      prevLoans.map((loan) =>
+        loan.loanApplicationId === id
+          ? { ...loan, applicationStatus: status }
+          : loan
+      )
     );
-    setLoans(updated);
   };
 
   return (
@@ -100,40 +104,78 @@ const LoanRequest = () => {
       <div style={{ padding: "20px" }}>
         <h2>Loan Request Management</h2>
 
-        <form onSubmit={formik.handleSubmit} style={{ marginBottom: "20px" }}>
-          <label>Status:&nbsp;</label>
-          <select
-            name="status"
-            onChange={formik.handleChange}
-            value={formik.values.status}
-          >
-            <option value="">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-          &nbsp;&nbsp;&nbsp;
-          <label>Loan Type:&nbsp;</label>
-          <select
-            name="loanType"
-            onChange={formik.handleChange}
-            value={formik.values.loanType}
-          >
-            <option value="">All</option>
-            <option value="Personal">Personal</option>
-            <option value="Business">Business</option>
-            <option value="Education">Education</option>
-          </select>
-          &nbsp;&nbsp;
-          <button type="submit">Search</button>
-        </form>
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            alignItems: "center",
+            maxWidth: "450px",
+            marginBottom: "20px",
+          }}
+        >
+          <label>
+            Status:&nbsp;
+            <select
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              style={{ minWidth: 120 }}
+            >
+              <option value="">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </label>
 
-        <table border="1" cellPadding="10" cellSpacing="0">
+          <label>
+            Loan Type:&nbsp;
+            <select
+              name="loanType"
+              value={filters.loanType}
+              onChange={handleFilterChange}
+              style={{ minWidth: 140 }}
+            >
+              <option value="">All</option>
+              <option value="Personal">Personal</option>
+              <option value="Business">Business</option>
+              <option value="Education">Education</option>
+            </select>
+          </label>
+        </div>
+
+        <table
+          border="1"
+          cellPadding="10"
+          cellSpacing="0"
+          style={{ width: "100%", cursor: "pointer" }}
+        >
           <thead>
             <tr>
-              <th onClick={() => handleSort("loanApplicationId")}>ID</th>
-              <th onClick={() => handleSort("applicationDate")}>Date</th>
-              <th onClick={() => handleSort("loanAmount")}>Amount</th>
+              <th onClick={() => handleSort("loanApplicationId")}>
+                ID{" "}
+                {sortField === "loanApplicationId"
+                  ? sortOrder === "asc"
+                    ? "▲"
+                    : "▼"
+                  : ""}
+              </th>
+              <th onClick={() => handleSort("applicationDate")}>
+                Date{" "}
+                {sortField === "applicationDate"
+                  ? sortOrder === "asc"
+                    ? "▲"
+                    : "▼"
+                  : ""}
+              </th>
+              <th onClick={() => handleSort("loanAmount")}>
+                Amount{" "}
+                {sortField === "loanAmount"
+                  ? sortOrder === "asc"
+                    ? "▲"
+                    : "▼"
+                  : ""}
+              </th>
               <th>Tenure</th>
               <th>Status</th>
               <th>Employment</th>
@@ -172,17 +214,27 @@ const LoanRequest = () => {
                 </td>
               </tr>
             ))}
+            {paginatedLoans.length === 0 && (
+              <tr>
+                <td colSpan="8" style={{ textAlign: "center" }}>
+                  No loans found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 
         <div style={{ marginTop: "10px" }}>
-          Page: {currentPage} / {totalPages}
-          &nbsp;
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}>
+          Page: {currentPage} / {totalPages || 1}&nbsp;
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+          >
             Prev
           </button>
           <button
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages || totalPages === 0}
           >
             Next
           </button>
@@ -215,7 +267,7 @@ const LoanRequest = () => {
                 <strong>Annual Income:</strong> ₹{selectedLoan.annualIncome}
               </p>
               <p>
-                <strong>Remarks:</strong> {selectedLoan.remarks}
+                <strong>Remarks:</strong> {selectedLoan.remarks || "-"}
               </p>
               <p>
                 <strong>Proof:</strong> {selectedLoan.proof}
