@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import LoanManagerNavbar from "./LoanManagerNavbar";
+import { getLoanApplications } from "../apiConfig";
 
 const LoanRequest = () => {
   const [allLoans, setAllLoans] = useState([]);
@@ -17,7 +18,7 @@ const LoanRequest = () => {
   const fetchLoans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/loans"); // 🔁 Replace with actual API
+      const response = await getLoanApplications(); // 🔁 Replace with actual API
       setAllLoans(response.data);
       setFilteredLoans(response.data);
     } catch (error) {
