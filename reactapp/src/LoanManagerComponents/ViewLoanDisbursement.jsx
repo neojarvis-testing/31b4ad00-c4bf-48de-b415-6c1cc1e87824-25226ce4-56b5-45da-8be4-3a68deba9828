@@ -83,11 +83,52 @@ const fetchLoanById = (id) =>
     )
   );
 
+// Reusable Modal component
+const Modal = ({ children, onClose }) => (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      backdropFilter: "blur(4px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    }}
+    onClick={onClose}
+  >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        background: "white",
+        borderRadius: "8px",
+        padding: "20px",
+        maxWidth: "600px",
+        width: "90%",
+        maxHeight: "80vh",
+        overflowY: "auto",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+      }}
+    >
+      {children}
+      <button
+        onClick={onClose}
+        style={{ marginTop: 15, padding: "8px 16px", cursor: "pointer" }}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+);
+
 const ViewLoanDisbursement = () => {
   const [disbursements, setDisbursements] = useState(mockDisbursements);
   const [editing, setEditing] = useState(null);
-  const [viewUser, setViewUser] = useState(null);
-  const [viewLoan, setViewLoan] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
 
   // Pagination & Sorting
   const [currentPage, setCurrentPage] = useState(1);
@@ -123,6 +164,7 @@ const ViewLoanDisbursement = () => {
   };
 
   const handleAdd = () => setEditing({});
+
   const handleEdit = (item) => setEditing(item);
 
   const handleSave = (formData) => {
@@ -144,16 +186,48 @@ const ViewLoanDisbursement = () => {
 
   const handleCancel = () => setEditing(null);
 
+  // Fetch user details and show modal
   const handleViewUser = async (id) => {
     const data = await fetchUserById(id);
-    setViewUser(data);
-    setViewLoan(null);
+    setModalContent(
+      <>
+        <h3>User Details</h3>
+        <p>
+          <strong>ID:</strong> {data.id}
+        </p>
+        <p>
+          <strong>Name:</strong> {data.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {data.email}
+        </p>
+        <p>
+          <strong>Phone:</strong> {data.phone}
+        </p>
+      </>
+    );
   };
 
+  // Fetch loan details and show modal
   const handleViewLoan = async (id) => {
     const data = await fetchLoanById(id);
-    setViewLoan(data);
-    setViewUser(null);
+    setModalContent(
+      <>
+        <h3>Loan Details</h3>
+        <p>
+          <strong>ID:</strong> {data.id}
+        </p>
+        <p>
+          <strong>Amount:</strong> ₹{data.amount}
+        </p>
+        <p>
+          <strong>Tenure:</strong> {data.tenure} months
+        </p>
+        <p>
+          <strong>Status:</strong> {data.status}
+        </p>
+      </>
+    );
   };
 
   return (
@@ -232,19 +306,9 @@ const ViewLoanDisbursement = () => {
           </button>
         </div>
 
-        {/* View Sections */}
-        {viewUser && (
-          <div style={{ marginTop: 20, padding: 10, border: "1px solid #ccc" }}>
-            <h4>User Details</h4>
-            <pre>{JSON.stringify(viewUser, null, 2)}</pre>
-          </div>
-        )}
-
-        {viewLoan && (
-          <div style={{ marginTop: 20, padding: 10, border: "1px solid #ccc" }}>
-            <h4>Loan Details</h4>
-            <pre>{JSON.stringify(viewLoan, null, 2)}</pre>
-          </div>
+        {/* Modal popup */}
+        {modalContent && (
+          <Modal onClose={() => setModalContent(null)}>{modalContent}</Modal>
         )}
       </div>
     </>
